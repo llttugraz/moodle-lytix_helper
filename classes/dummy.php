@@ -128,7 +128,9 @@ class dummy {
             $logstore->userid    = $student->id;
             $logstore->courseid  = $courseid;
             $logstore->contextid = $context->id;
-            $logstore->timestamp = $date->getTimestamp();
+            $inday = clone $date;
+            $inday->setTime(12,00,00);
+            $logstore->timestamp = $inday->getTimestamp();
             if (!rand(0, 4)) {
                 $logstore->core_time       = 0;
                 $logstore->forum_time      = 0;
@@ -172,8 +174,7 @@ class dummy {
                 $logstore->feedback_click      = (int)ceil($logstore->forum_time / 3);
             }
             $logstores[] = $logstore;
-
-            date_add($date, date_interval_create_from_date_string('1 day'));
+            $date->modify('+1 day');
         }
         $DB->insert_records('lytix_helper_dly_mdl_acty', $logstores);
     }
@@ -257,7 +258,7 @@ class dummy {
      * @param string $option
      * @param int $completed
      * @param int $send
-     * @return stdClass
+     * @return \stdClass
      * @throws \dml_exception
      */
     public static function create_fake_planner_milestone($course, $user, $type, $marker, $startdate, $enddate,
