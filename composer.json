@@ -1,5 +1,5 @@
 {
-    "name": "llttugraz/lytix_helper",
+    "name": "llttugraz-lytix/moodle-lytix_helper",
     "description": "Plugin with helper functions needed in several subplugins.",
     "keywords": [
         "moodle",
@@ -18,6 +18,6 @@
     "require": {
         "moodle/moodle": "3.11 - 4.1",
         "llttugraz/moodle-local_lytix": "*",
-        "llttugraz/lytix_logs": "*"
+        "llttugraz-lytix/moodle-lytix_logs": "*"
     }
 }
