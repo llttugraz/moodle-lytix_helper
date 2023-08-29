@@ -129,7 +129,7 @@ class dummy {
             $logstore->courseid  = $courseid;
             $logstore->contextid = $context->id;
             $inday = clone $date;
-            $inday->setTime(12,00,00);
+            $inday->setTime(12, 00, 00);
             $logstore->timestamp = $inday->getTimestamp();
             if (!rand(0, 4)) {
                 $logstore->core_time       = 0;
