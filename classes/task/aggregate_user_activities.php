@@ -20,8 +20,7 @@
  * @package    lytix_helper
  * @category   task
  * @author     Günther Moser <moser@tugraz.at>
- * @author     Viktoria Wieser <viktoria.wieser@tugraz.at>
- * @copyright  2021 Educational Technologies, Graz, University of Technology
+ * @copyright  2023 Educational Technologies, Graz, University of Technology
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -37,8 +36,7 @@ class aggregate_user_activities extends \core\task\scheduled_task
      *
      * @return string
      */
-    public function get_name()
-    {
+    public function get_name() {
         return get_string('cron_aggregate_user_activities', 'lytix_helper');
     }
 
@@ -47,8 +45,7 @@ class aggregate_user_activities extends \core\task\scheduled_task
      *
      * @throws \dml_exception
      */
-    public function execute()
-    {
+    public function execute() {
         global $DB;
 
         $courseids = explode(',', get_config('local_lytix', 'course_list'));
@@ -79,7 +76,7 @@ class aggregate_user_activities extends \core\task\scheduled_task
             $enddate = (new \DateTime())->setTimestamp($startdate->getTimestamp());
             $enddate->modify('+24 hours');
 
-            $aggregated_data = [];
+            $aggregated = [];
 
             foreach ($users as $userid) {
                 $sql = "SELECT * FROM {logstore_standard_log} logstore WHERE logstore.userid = :userid
@@ -92,45 +89,45 @@ class aggregate_user_activities extends \core\task\scheduled_task
                 $params['enddate'] = $enddate->getTimestamp();
                 $records = $DB->get_records_sql($sql, $params);
 
-                $max_time_gap = 1800; // Equal to 30 minutes.
-                $previous_record = null;
+                $maxtimegap = 1800; // Equal to 30 minutes.
+                $previous = null;
 
                 foreach ($records as $record) {
                     $userid = $record->userid;
                     $courseid = $record->courseid;
 
-                    if (!isset($aggregated_data[$userid][$courseid])) {
-                        $aggregated_data[$userid][$courseid] = [];
+                    if (!isset($aggregated[$userid][$courseid])) {
+                        $aggregated[$userid][$courseid] = [];
                     }
 
-                    if ($previous_record) {
-                        $time_gap = $record->timecreated - $previous_record->timecreated;
+                    if ($previous) {
+                        $timegap = $record->timecreated - $previous->timecreated;
 
-                        if ($time_gap >= 0) {
+                        if ($timegap >= 0) {
                             if ($this->check_component($record->component)) {
                                 $component = $record->component;
 
-                                if (!isset($aggregated_data[$userid][$courseid][$component])) {
-                                    $aggregated_data[$userid][$courseid][$component] = ['time' => 0, 'clicks' => 0];
+                                if (!isset($aggregated[$userid][$courseid][$component])) {
+                                    $aggregated[$userid][$courseid][$component] = ['time' => 0, 'clicks' => 0];
                                 }
 
-                                if ($time_gap < $max_time_gap) {
-                                    $aggregated_data[$userid][$courseid][$component]['time'] += $time_gap;
+                                if ($timegap < $maxtimegap) {
+                                    $aggregated[$userid][$courseid][$component]['time'] += $timegap;
                                 }
-                                $aggregated_data[$userid][$courseid][$component]['clicks']++;
+                                $aggregated[$userid][$courseid][$component]['clicks']++;
                             }
                         } else {
                             error_log("Negative time gap detected for record ID: {$record->id} 
-                            and previous record ID: {$previous_record->id}");
+                            and previous record ID: {$previous->id}");
                         }
                     }
-                    $previous_record = $record;
+                    $previous = $record;
                 }
             }
 
-            if ($aggregated_data) {
+            if ($aggregated) {
 
-                foreach ($aggregated_data as $userid => $user) {
+                foreach ($aggregated as $userid => $user) {
 
                     foreach ($user as $courseid => $data) {
 
@@ -156,6 +153,12 @@ class aggregate_user_activities extends \core\task\scheduled_task
         }
     }
 
+    /**
+     * Check if component is relevant for the aggregation.
+     * 
+     * @param string $component
+     * @return string
+     */
     public function check_component(string $component) {
         $component_map = [
             'core' => 'core',
