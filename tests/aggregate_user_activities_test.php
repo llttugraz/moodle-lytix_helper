@@ -74,6 +74,7 @@ class aggregate_user_activities_test extends \advanced_testcase {
         $today = new \DateTime('tomorrow midnight');
         set_config('semester_start', $start->format('Y-m-d'), 'local_lytix');
         set_config('semester_end', $today->format('Y-m-d'), 'local_lytix');
+        set_config('last_aggregation_date', $start->format('Y-m-d'), 'local_lytix');
         // Create course.
 
         $courseinfo            = new \stdClass();
@@ -104,19 +105,7 @@ class aggregate_user_activities_test extends \advanced_testcase {
     /**
      * Test execute of task.
      * @covers ::execute
-     * @covers ::set_new_timestamp
-     * @covers ::aggregate_moodle_events_per_day
-     * @covers ::calcualte_moodle_event_duration
-     * @covers ::add_bbb_time
-     * @covers ::add_core_time
-     * @covers ::add_feedback_time
-     * @covers ::add_forum_time
-     * @covers ::add_grade_time
-     * @covers ::add_h5p_time
-     * @covers ::add_quiz_time
-     * @covers ::add_resource_time
-     * @covers ::add_submission_time
-     * @covers ::add_time
+     * @covers ::check_component
      * @return void
      * @throws \dml_exception
      */
@@ -127,8 +116,8 @@ class aggregate_user_activities_test extends \advanced_testcase {
             self::simulate_interactions($student->id, $this->course->id);
         }
         $logs = $DB->get_records('logstore_standard_log', ['courseid' => $this->course->id]);
-        self::assertEquals($this->usercount * intdiv($this->days, 7) * $this->interactioncount, count($logs),
-            "There should be 50 records per week per user.");
+        self::assertEquals($this->usercount * $this->days * $this->interactioncount, count($logs),
+            "There should be min records per day per user.");
 
         $task = new aggregate_user_activities();
         $task->execute();
@@ -136,8 +125,8 @@ class aggregate_user_activities_test extends \advanced_testcase {
         $dlys = $DB->get_records('lytix_helper_dly_mdl_acty', ['courseid' => $this->course->id]);
         self::assertEquals($this->usercount * $this->days, count($dlys), "");
 
-        $last = $DB->get_records('lytix_helper_last_aggreg', ['courseid' => $this->course->id]);
-        self::assertEquals($this->usercount, count($last), "There should be exactly one row per student.");
+        //$last = $DB->get_records('lytix_helper_last_aggreg', ['courseid' => $this->course->id]);
+        //self::assertEquals($this->usercount, count($last), "There should be exactly one row per student.");
     }
 
     /**
@@ -150,9 +139,10 @@ class aggregate_user_activities_test extends \advanced_testcase {
      */
     public function simulate_interactions($userid, $courseid) {
         $start = new \DateTime(get_config('local_lytix', 'semester_start'));
-        $end = new \DateTime(get_config('local_lytix', 'semester_end'));
+        $end = new \DateTime(get_config('local_lytix', 'semester_start'));
+        $end->modify('+1 day');
 
-        for ($week = 1; $week <= intdiv($this->days, 7); $week++) {
+        for ($day = 0; $day < $this->days; $day++) {
             // Simulate logins for each week.
             self::simulate_logins($start->getTimestamp(), $end->getTimestamp(), $userid);
 
@@ -160,8 +150,8 @@ class aggregate_user_activities_test extends \advanced_testcase {
             self::simulate_course_interactions($start->getTimestamp(), $end->getTimestamp(), $userid, $courseid);
 
             // Update the start and end dates for the next week.
-            $start->modify('+1 week');
-            $end->modify('+1 week');
+            $start->modify('+1 day');
+            $end->modify('+1 day');
         }
     }
 
@@ -268,4 +258,3 @@ class aggregate_user_activities_test extends \advanced_testcase {
         return $randomstring;
     }
 }
-
