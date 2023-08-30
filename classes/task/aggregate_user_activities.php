@@ -29,8 +29,7 @@ namespace lytix_helper\task;
 /**
  * Class aggregate_user_activities
  */
-class aggregate_user_activities extends \core\task\scheduled_task
-{
+class aggregate_user_activities extends \core\task\scheduled_task {
     /**
      * Get a descriptive name for this task (shown to admins).
      *
@@ -117,7 +116,7 @@ class aggregate_user_activities extends \core\task\scheduled_task
                                 $aggregated[$userid][$courseid][$component]['clicks']++;
                             }
                         } else {
-                            error_log("Negative time gap detected for record ID: {$record->id} 
+                            debugging("Negative time gap detected for record ID: {$record->id}
                             and previous record ID: {$previous->id}");
                         }
                     }
@@ -175,13 +174,13 @@ class aggregate_user_activities extends \core\task\scheduled_task
             'mod_resource' => 'resource',
             'mod_glossary' => 'resource',
             'mod_lightboxgallery' => 'resource',
-
+            
             'mod_quiz' => 'quiz',
-
+            
             'core_h5p' => 'h5p',
             'mod_h5pactivity' => 'h5p',
             'mod_bigbluebuttonbn' => 'bbb',
-
+            
             'mod_assign' => 'submission',
             'mod_workshop' => 'submission',
             'assignfeedback_file' => 'submission',
@@ -189,7 +188,7 @@ class aggregate_user_activities extends \core\task\scheduled_task
             'assignfeedback_comments' => 'submission',
             'assignsubmission_file' => 'submission',
             'assignsubmission_onlinetext' => 'submission',
-
+            
             'mod_feedback' => 'feedback'
         ];
 
