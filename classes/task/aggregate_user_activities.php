@@ -154,18 +154,15 @@ class aggregate_user_activities extends \core\task\scheduled_task {
 
     /**
      * Check if component is relevant for the aggregation.
-     * 
+     *
      * @param string $component
      * @return string
      */
     public function check_component(string $component) {
-        $component_map = [
+        $map = [
             'core' => 'core',
-
             'mod_forum' => 'forum',
-
             'gradereport_overview' => 'grade',
-
             'mod_url' => 'resource',
             'mod_book' => 'resource',
             'mod_scrom' => 'resource',
@@ -174,13 +171,10 @@ class aggregate_user_activities extends \core\task\scheduled_task {
             'mod_resource' => 'resource',
             'mod_glossary' => 'resource',
             'mod_lightboxgallery' => 'resource',
-            
             'mod_quiz' => 'quiz',
-            
             'core_h5p' => 'h5p',
             'mod_h5pactivity' => 'h5p',
             'mod_bigbluebuttonbn' => 'bbb',
-            
             'mod_assign' => 'submission',
             'mod_workshop' => 'submission',
             'assignfeedback_file' => 'submission',
@@ -188,10 +182,9 @@ class aggregate_user_activities extends \core\task\scheduled_task {
             'assignfeedback_comments' => 'submission',
             'assignsubmission_file' => 'submission',
             'assignsubmission_onlinetext' => 'submission',
-            
             'mod_feedback' => 'feedback'
         ];
 
-        return (array_key_exists($component, $component_map)) ? $component_map[$component] : '';
+        return (array_key_exists($component, $map)) ? $map[$component] : '';
     }
 }
