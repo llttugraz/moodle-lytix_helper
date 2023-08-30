@@ -124,9 +124,6 @@ class aggregate_user_activities_test extends \advanced_testcase {
 
         $dlys = $DB->get_records('lytix_helper_dly_mdl_acty', ['courseid' => $this->course->id]);
         self::assertEquals($this->usercount * $this->days, count($dlys), "");
-
-        //$last = $DB->get_records('lytix_helper_last_aggreg', ['courseid' => $this->course->id]);
-        //self::assertEquals($this->usercount, count($last), "There should be exactly one row per student.");
     }
 
     /**
