@@ -17,6 +17,7 @@
 /**
  * Plugin version info
  * @package    lytix_helper
+ * @author     Guenther Moser <moser@tugraz.at>
  * @copyright  2023 Educational Technologies, Graz, University of Technology
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -24,12 +25,12 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2023090400; // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version   = 2023100300; // The current plugin version (Date: YYYYMMDDXX).
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->requires = 2021051700; // Requires this Moodle version 3.11.
+$plugin->requires = 2022112800.00; // Requires this Moodle version 4.1.
 $plugin->component = 'lytix_helper'; // Full name of the plugin.
 $plugin->dependencies = [
     'lytix_logs' => ANY_VERSION
 ];
-$plugin->release   = 'v1.0.8';
+$plugin->release   = 'v1.0.9';
 $plugin->supported = [401, 401];
