@@ -39,6 +39,28 @@ class calculation_helper_test extends \advanced_testcase {
         $this->resetAfterTest();
     }
 
+    public function generateData(): void {
+        global $DB;
+
+        $records = [
+            (object)[
+                'userid' => 1,
+                'courseid' => 101,
+                'contextid' => 1,
+                'timestamp' => strtotime('2023-10-01'),
+                'core_time' => 10,
+                'forum_time' => 20,
+                // ... andere Felder
+            ],
+            // ... weitere Datensätze
+        ];
+
+        // Einfügen der Testdatensätze in die Datenbank
+        foreach ($records as $record) {
+            $DB->insert_record('lytix_helper_dly_mdl_acty', $record);
+        }
+    }
+
     /**
      * Testing the helper median function.
      * @covers ::median
@@ -135,4 +157,23 @@ class calculation_helper_test extends \advanced_testcase {
         $actual = calculation_helper::div($divident, $divisor);
         $this->assertEquals($expected, $actual);
     }
+
+    /**
+     * Testing the aggregation of times in our table.
+     * @return void
+     */
+    public function test_get_activity_aggregation() {
+        self::assertTrue(false);
+
+
+                // Aufruf der Funktion
+                $result = your_class_name::get_activity_aggregation(101, strtotime('2023-10-01'), strtotime('2023-10-02'));
+
+                // Überprüfen des Ergebnisses
+                $this->assertEquals(10, $result['time']['core']);
+                $this->assertEquals(20, $result['time']['forum']);
+                // ... weitere Assertions
+            }
+
+
 }

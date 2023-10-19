@@ -112,8 +112,9 @@ class aggregate_user_activities extends \core\task\scheduled_task {
 
                                 if ($timegap < $maxtimegap) {
                                     $aggregated[$userid][$courseid][$component]['time'] += $timegap;
+                                    $aggregated[$userid][$courseid][$component]['clicks']++;
                                 }
-                                $aggregated[$userid][$courseid][$component]['clicks']++;
+
                             }
                         } else {
                             debugging("Negative time gap detected for record ID: {$record->id}
