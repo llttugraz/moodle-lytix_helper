@@ -39,24 +39,22 @@ class calculation_helper_test extends \advanced_testcase {
         $this->resetAfterTest();
     }
 
-    public function generateData(): void {
+    /**
+     * Generate fake data for a number of students for a given course.
+     *
+     * @param $course
+     * @param $context
+     * @param $students
+     * @return void
+     * @throws \dml_exception
+     */
+    public function generateData($course, $context, $students): void {
         global $DB;
 
-        $records = [
-            (object)[
-                'userid' => 1,
-                'courseid' => 101,
-                'contextid' => 1,
-                'timestamp' => strtotime('2023-10-01'),
-                'core_time' => 10,
-                'forum_time' => 20,
-                // ... andere Felder
-            ],
-            // ... weitere Datensätze
-        ];
-
-        // Einfügen der Testdatensätze in die Datenbank
-        foreach ($records as $record) {
+        foreach ($students as $student) {
+            $record = (object)['userid' => $student->id, 'courseid' => $course->id, 'contextid' => $context->id,
+                'timestamp' => strtotime('2023-10-01'), 'core_time' => 100, 'forum_time' => 50,
+                'core_click' => 10, 'forum_click' => 5];
             $DB->insert_record('lytix_helper_dly_mdl_acty', $record);
         }
     }
@@ -159,21 +157,51 @@ class calculation_helper_test extends \advanced_testcase {
     }
 
     /**
-     * Testing the aggregation of times in our table.
+     * Testing the aggregation of times in our table 'lytix_helper_dly_mdl_acty'.
+     *
      * @return void
      */
     public function test_get_activity_aggregation() {
-        self::assertTrue(false);
+        $course = new \stdClass();
+        $course->fullname = 'Get Acticity Aggregation';
+        $course->shortname = 'get_activity_aggregation';
+        $course->category = 1;
+        $students = dummy::create_fake_students(10);
+        $result = dummy::create_course_and_enrol_users($course, $students);
+        $course = $result['course'];
+        $context  = \context_course::instance($course->id);
 
+        self::generateData($course, $context, $students);
+        $result = calculation_helper::get_activity_aggregation($course->id,
+            strtotime('2023-10-01'), strtotime('2023-10-02'), $result['student0']->id);
 
-                // Aufruf der Funktion
-                $result = your_class_name::get_activity_aggregation(101, strtotime('2023-10-01'), strtotime('2023-10-02'));
+        // Checking the results for time of student0
+        $this->assertEquals(100, $result['time']['core']);
+        $this->assertEquals(50, $result['time']['forum']);
 
-                // Überprüfen des Ergebnisses
-                $this->assertEquals(10, $result['time']['core']);
-                $this->assertEquals(20, $result['time']['forum']);
-                // ... weitere Assertions
-            }
+        $result = calculation_helper::get_activity_aggregation($course->id,
+            strtotime('2023-10-01'), strtotime('2023-10-02'));
 
+        // Checking the results for time for all
+        $this->assertEquals(1000, $result['time']['core']);
+        $this->assertEquals(500, $result['time']['forum']);
+        // Continue for each field...
+        $this->assertEquals(0, $result['time']['grade']);
+        $this->assertEquals(0, $result['time']['submission']);
+        $this->assertEquals(0, $result['time']['resource']);
+        $this->assertEquals(0, $result['time']['quiz']);
+        $this->assertEquals(0, $result['time']['video']);
+        $this->assertEquals(0, $result['time']['feedback']);
 
+        // Checking the results for clicks (assuming all click values in the test data are set to 0)
+        $this->assertEquals(100, $result['click']['core']);
+        $this->assertEquals(50, $result['click']['forum']);
+        // Continue for each field...
+        $this->assertEquals(0, $result['click']['grade']);
+        $this->assertEquals(0, $result['click']['submission']);
+        $this->assertEquals(0, $result['click']['resource']);
+        $this->assertEquals(0, $result['click']['quiz']);
+        $this->assertEquals(0, $result['click']['video']);
+        $this->assertEquals(0, $result['click']['feedback']);
+    }
 }

@@ -67,7 +67,7 @@ class course_settings {
         }
         $semesterend = new \DateTime(get_config('local_lytix', 'semester_end'));
 
-        if (($end && $end->getTimestamp() > $semesterend->getTimestamp()) || !$end) {
+        if (($end && $end->getTimestamp() < $semesterend->getTimestamp()) || !$end) {
             $end = $semesterend;
         }
 
