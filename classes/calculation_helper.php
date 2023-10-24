@@ -72,10 +72,10 @@ class calculation_helper {
      * Aggregates the time spend for all or just one student in the course. The calculation is done in the DB
      * and the retuned array is can be provided to the plugins timeoverview and activity.
      *
-     * @param $courseid
-     * @param $startdate
-     * @param $enddate
-     * @param $userid
+     * @param int $courseid
+     * @param int $startdate
+     * @param int $enddate
+     * @param int $userid
      * @return array
      * @throws \coding_exception
      * @throws \dml_exception

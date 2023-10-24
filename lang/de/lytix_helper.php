@@ -27,6 +27,9 @@ $string['pluginname'] = 'Lytix Helper';
 
 $string['privacy:metadata'] = 'This plugin does not store any data.';
 
+$string['time'] = 'Zeit';
+$string['clicks'] = 'Klicks';
+
 // Tasks.
 $string['cron_aggregate_user_activities'] = "Aggregate user activities for lytix subplugin activity basic";
 

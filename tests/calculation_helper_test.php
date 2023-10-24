@@ -42,13 +42,13 @@ class calculation_helper_test extends \advanced_testcase {
     /**
      * Generate fake data for a number of students for a given course.
      *
-     * @param $course
-     * @param $context
-     * @param $students
+     * @param \stdClass $course
+     * @param \context $context
+     * @param array $students
      * @return void
      * @throws \dml_exception
      */
-    public function generateData($course, $context, $students): void {
+    public function generate_data($course, $context, $students): void {
         global $DB;
 
         foreach ($students as $student) {
@@ -158,6 +158,7 @@ class calculation_helper_test extends \advanced_testcase {
 
     /**
      * Testing the aggregation of times in our table 'lytix_helper_dly_mdl_acty'.
+     * @covers ::get_activity_aggregation
      *
      * @return void
      */
@@ -171,18 +172,18 @@ class calculation_helper_test extends \advanced_testcase {
         $course = $result['course'];
         $context  = \context_course::instance($course->id);
 
-        self::generateData($course, $context, $students);
+        self::generate_data($course, $context, $students);
         $result = calculation_helper::get_activity_aggregation($course->id,
             strtotime('2023-10-01'), strtotime('2023-10-02'), $result['student0']->id);
 
-        // Checking the results for time of student0
+        // Checking the results for time of student0.
         $this->assertEquals(100, $result['time']['core']);
         $this->assertEquals(50, $result['time']['forum']);
 
         $result = calculation_helper::get_activity_aggregation($course->id,
             strtotime('2023-10-01'), strtotime('2023-10-02'));
 
-        // Checking the results for time for all
+        // Checking the results for time for all.
         $this->assertEquals(1000, $result['time']['core']);
         $this->assertEquals(500, $result['time']['forum']);
         // Continue for each field...
@@ -193,7 +194,7 @@ class calculation_helper_test extends \advanced_testcase {
         $this->assertEquals(0, $result['time']['video']);
         $this->assertEquals(0, $result['time']['feedback']);
 
-        // Checking the results for clicks (assuming all click values in the test data are set to 0)
+        // Checking the results for clicks (assuming all click values in the test data are set to 0).
         $this->assertEquals(100, $result['click']['core']);
         $this->assertEquals(50, $result['click']['forum']);
         // Continue for each field...
