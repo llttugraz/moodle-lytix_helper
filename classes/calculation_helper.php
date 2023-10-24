@@ -119,7 +119,7 @@ class calculation_helper {
         $record = $DB->get_record_sql($sql, $params);
 
         $data['time'] = [
-            'Aggregation' => get_string('time', 'lytix_timeoverview'),
+            'Aggregation' => get_string('time', 'lytix_helper'),
 
             'core'       => $record->core_time_sum,
             'forum'      => $record->forum_time_sum,
@@ -132,7 +132,7 @@ class calculation_helper {
         ];
 
         $data['click'] = [
-            'Aggregation' => get_string('clicks', 'lytix_timeoverview'),
+            'Aggregation' => get_string('clicks', 'lytix_helper'),
 
             'core'       => $record->core_click_sum,
             'forum'      => $record->forum_click_sum,
