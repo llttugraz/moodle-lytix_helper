@@ -31,8 +31,8 @@ $tasks = array(
     array(
         'classname' => 'lytix_helper\task\aggregate_user_activities',
         'blocking' => 0,
-        'minute' => '30',
-        'hour' => '4',
+        'minute' => '00',
+        'hour' => '3',
         'day' => '*',
         'dayofweek' => '*',
         'month' => '*'
