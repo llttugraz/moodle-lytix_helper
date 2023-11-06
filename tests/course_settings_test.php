@@ -82,16 +82,4 @@ class course_settings_test extends \advanced_testcase {
         $tmp = course_settings::getcourseenddate($course->id);
         self::assertEquals($tmp->format('Y-m-d'), $now->format('Y-m-d'));
     }
-
-    /**
-     * Testing the helper is_grade_monitor_enabled function.
-     * @covers ::is_grade_monitor_enabled
-     * @return void
-     * @throws \dml_exception
-     */
-    public function test_is_grade_monitor_enabled() {
-        self::assertFalse(course_settings::is_grade_monitor_enabled(2), "GM should not be enabled.");
-        set_config('grade_monitor_list', 2, 'local_lytix');
-        self::assertTrue(course_settings::is_grade_monitor_enabled(2), "GM should be enabled.");
-    }
 }

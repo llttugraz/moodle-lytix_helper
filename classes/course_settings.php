@@ -74,15 +74,4 @@ class course_settings {
         return $end;
     }
 
-    /**
-     * Simple test to figure out, if grade monitor is active in course.
-     *
-     * @param int $courseid
-     * @return bool
-     * @throws \dml_exception
-     */
-    public static function is_grade_monitor_enabled($courseid) {
-        return in_array($courseid, explode(',', get_config('local_lytix', 'grade_monitor_list')));
-    }
-
 }
