@@ -111,14 +111,15 @@ class dummy {
     }
 
     /**
-     * Creates fake activity data for course.
+     * * Creates fake activity data for course.
      * @param \DateTime $date
      * @param \DateTime $today
-     * @param false|mixed|\stdClass $student
+     * @param \stdClass $student
      * @param int $courseid
-     * @param false|mixed|\stdClass $context
-     * @throws \coding_exception
+     * @param \stdClass $context
+     * @return void
      * @throws \dml_exception
+     * @throws coding_exception
      */
     public static function create_fake_data_for_course(\DateTime $date, \DateTime $today, \stdClass $student,
                                                        int $courseid, \stdClass $context) {
@@ -183,7 +184,8 @@ class dummy {
 
     /**
      * Creates fake planner events for course.
-     * @param false|mixed|\stdClass $course
+     *
+     * @param \stdClass $course
      * @param string $type
      * @param string $marker
      * @param int $startdate
@@ -292,7 +294,8 @@ class dummy {
 
     /**
      * Updates an already created milestone.
-     * @param false|mixed|\stdClass $record
+     *
+     * @param \stdClass $record
      * @return bool
      * @throws \dml_exception
      */
@@ -304,12 +307,10 @@ class dummy {
 
     /**
      * Create a quiz.
-     * @param \stdClass|null $course
-     * @param int $maxgrade
-     * @param int $timeopen
-     * @param int $timeclose
-     * @return mixed
-     * @throws \coding_exception
+     *
+     * @param \stdClass $course
+     * @return \stdClass
+     * @throws coding_exception
      */
     public static function create_quiz(\stdClass $course) {
         // Make a quiz.
@@ -322,12 +323,10 @@ class dummy {
 
     /**
      * Creates a quiz question.
-     * @param \stdClass|null $course
-     * @param mixed $quiz
-     * @param null|\stdClass $teacher
-     * @param int $gradepass
-     * @return quiz
-     * @throws \coding_exception
+     *
+     * @param \stdClass $quiz
+     * @return \stdClass
+     * @throws coding_exception
      */
     public static function create_quiz_question(\stdClass $quiz) {
         // Create a numerical question.
@@ -375,10 +374,11 @@ class dummy {
 
     /**
      * Finish quiz attempt.
-     * @param quiz_attempt|\stdClass $attemptobj
+     *
+     * @param quiz_attempt $attemptobj
      * @param int $timenow
      * @param string $answer
-     *
+     * @return void
      */
     public static function finish_quiz_attempt(quiz_attempt $attemptobj, int $timenow, string $answer) {
         $tosubmit = [1 => ['answer' => $answer]];

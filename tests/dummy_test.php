@@ -25,9 +25,13 @@
 
 namespace lytix_helper;
 
+defined('MOODLE_INTERNAL') || die();
+
 global $CFG;
+
 require_once($CFG->dirroot . '/mod/quiz/locallib.php');
 
+use mod_quiz\quiz_settings;
 
 /**
  * Class privacy_lib_test
