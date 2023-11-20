@@ -25,8 +25,11 @@
 
 namespace lytix_helper;
 
-use quiz;
-use quiz_attempt;
+global $CFG;
+require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+
+use mod_quiz\plugininfo\quiz;
+use mod_quiz\quiz_attempt;
 
 /**
  * Class privacy_lib_test
@@ -225,40 +228,54 @@ class dummy_test extends \advanced_testcase {
         $today = new \DateTime('today midnight');
         date_add($today, date_interval_create_from_date_string('6 hours'));
 
-        $teacher = $this->getDataGenerator()->create_user(['role' => 'editingteacher']);
         $student = $this->getDataGenerator()->create_user(['role' => 'student']);
         $course = $this->getDataGenerator()->create_course(
             ['enablecompletion' => 1, 'startdate' => $start->getTimestamp(), 'enddate' => $today->getTimestamp()]);
 
         // Create a quiz.
-        $quiz = dummy::create_quiz($course, 100, $start->getTimestamp(), $today->getTimestamp());
+        $quiz = dummy::create_quiz($course);
 
         // Check the quiz.
         self::assertIsObject($quiz, "Should be an object.");
 
         // Create a numerical question.
-        $quizobj = dummy::create_quiz_question($course, $quiz, $teacher, 50);
+        $quiz = dummy::create_quiz_question($quiz);
 
         // Check the numerical question.
-        self::assertIsObject($quizobj, "Should be an object.");
-        self::assertIsObject($quizobj->get_quiz(), "Should also be an object");
-        self::assertTrue($quizobj->has_questions(), "Quiz should have one question.");
-        self::assertEquals(0, $quizobj->get_quiz()->attempts, "Quiz without attempt.");
+        self::assertIsObject($quiz, "Should be an object.");
 
         // Start the passing attempt.
         $timenow = time();
-        $attempt = dummy::create_quiz_attempt($quizobj, $student, $timenow, '3.14');
+        $attempt = dummy::create_quiz_attempt($quiz, $student, $timenow);
 
         // Check the passing attempt.
         self::assertIsObject($attempt, "Should be an object.");
-        self::assertEquals($quizobj->get_quizid(), $attempt->quiz, "Should be the same quiz.");
 
         // Finish the passing attempt.
-        dummy::finish_quiz_attempt($attempt, $timenow);
+        dummy::finish_quiz_attempt($attempt, $timenow, '3.14');
 
         // Check the finished attempt.
         self::assertIsObject($attempt, "Should be an object.");
-        self::assertEquals($quizobj->get_quizid(), $attempt->quiz, "Should be the same quiz.");
+
+        // Check that results are stored as expected.
+        $this->assertEquals(1, $attempt->get_attempt_number());
+        $this->assertEquals(1, $attempt->get_sum_marks());
+        $this->assertEquals(true, $attempt->is_finished());
+        $this->assertEquals($timenow, $attempt->get_submitted_date());
+        $this->assertEquals($student->id, $attempt->get_userid());
+        $this->assertTrue($attempt->has_response_to_at_least_one_graded_question());
+        $this->assertEquals(0, $attempt->get_number_of_unanswered_questions());
+
+        // Check quiz grades.
+        $grades = quiz_get_user_grades($quiz, $student->id);
+        $grade = array_shift($grades);
+        $this->assertEquals(100.0, $grade->rawgrade);
+
+        // Check grade book.
+        $gradebookgrades = grade_get_grades($course->id, 'mod', 'quiz', $quiz->id, $student->id);
+        $gradebookitem = array_shift($gradebookgrades->items);
+        $gradebookgrade = array_shift($gradebookitem->grades);
+        $this->assertEquals(100, $gradebookgrade->grade);
     }
 
     /**

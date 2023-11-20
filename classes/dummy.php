@@ -40,10 +40,9 @@ use assign;
 use coding_exception;
 use completion_info;
 use context_module;
-use grade_item;
+use mod_quiz\plugininfo\quiz;
+use mod_quiz\quiz_settings;
 use question_engine;
-use quiz;
-use quiz_attempt;
 
 /**
  * This class generates dummy data.
@@ -305,28 +304,12 @@ class dummy {
      * @return mixed
      * @throws \coding_exception
      */
-    public static function create_quiz($course, $maxgrade, $timeopen = 0, $timeclose = 0) {
-        // Make a scale and an outcome.
-        $scale   = advanced_testcase::getDataGenerator()->create_scale();
-        $data    = array('courseid'  => $course->id,
-            'fullname'  => 'Quizzes',
-            'shortname' => 'Quizzes',
-            'scaleid'   => $scale->id);
-        $outcome = advanced_testcase::getDataGenerator()->create_grade_outcome($data);
-
-        // Make a quiz with the outcome on.
+    public static function create_quiz(\stdClass $course) {
+        // Make a quiz.
         $quizgenerator = advanced_testcase::getDataGenerator()->get_plugin_generator('mod_quiz');
-        $data          = array('course'                  => $course->id,
-            'outcome_' . $outcome->id => 1,
-            'grade'                   => $maxgrade,
-            'questionsperpage'        => 0,
-            'sumgrades'               => 1,
-            'completion'              => COMPLETION_TRACKING_MANUAL,
-            'completionpass'          => 1,
-            'timeopen'                => $timeopen,
-            'timeclose'               => $timeclose);
-        $quiz          = $quizgenerator->create_instance($data);
-        $cm            = get_coursemodule_from_id('quiz', $quiz->cmid);
+
+        $quiz = $quizgenerator->create_instance(['course' => $course->id, 'questionsperpage' => 0, 'grade' => 100.0,
+            'sumgrades' => 1]);
         return $quiz;
     }
 
@@ -339,57 +322,66 @@ class dummy {
      * @return quiz
      * @throws \coding_exception
      */
-    public static function create_quiz_question($course, $quiz, $teacher, $gradepass) {
+    public static function create_quiz_question(\stdClass $quiz) {
         // Create a numerical question.
+
         $questiongenerator = advanced_testcase::getDataGenerator()->get_plugin_generator('core_question');
 
-        $cat      = $questiongenerator->create_question_category();
-        $question = $questiongenerator->create_question('numerical', null, array('category' => $cat->id));
-        quiz_add_quiz_question($question->id, $quiz);
+        $cat = $questiongenerator->create_question_category();
+        $numq = $questiongenerator->create_question('numerical', null, ['category' => $cat->id]);
 
-        $quizobj = quiz::create($quiz->id, $teacher->id);
+        // Add question to the quiz.
+        quiz_add_quiz_question($numq->id, $quiz);
 
-        // Set grade to pass.
-        $item            = grade_item::fetch(array('courseid'   => $course->id, 'itemtype' => 'mod',
-            'itemmodule' => 'quiz', 'iteminstance' => $quiz->id, 'outcomeid' => null));
-        $item->gradepass = $gradepass;
-        $item->update();
-
-        return $quizobj;
+        return $quiz;
     }
 
     /**
      * Create a quiz attempt.
-     * @param mixed $quizobj
+     * @param null|\stdClass $quiz
      * @param null|\stdClass $student
      * @param int $timenow
-     * @param int $answer
      * @return object|\stdClass
      * @throws \moodle_exception
      */
-    public static function create_quiz_attempt($quizobj, $student, $timenow, $answer) {
+    public static function create_quiz_attempt(\stdClass $quiz, \stdClass $student, int $timenow) {
+        $quizobj = quiz_settings::create($quiz->id, $student->id);
+
+        // Start the attempt.
         $quba = question_engine::make_questions_usage_by_activity('mod_quiz', $quizobj->get_context());
         $quba->set_preferred_behaviour($quizobj->get_quiz()->preferredbehaviour);
 
-        $attempt = quiz_create_attempt(
-            $quizobj, 1, false, $timenow, false, $student->id);
+        $attempt = quiz_create_attempt($quizobj, 1, false, $timenow, false, $student->id);
+
         quiz_start_new_attempt($quizobj, $quba, $attempt, 1, $timenow);
+        advanced_testcase::assertEquals('1,0', $attempt->layout);
+
         quiz_attempt_save_started($quizobj, $quba, $attempt);
 
         // Process some responses from the student.
-        $attemptobj = quiz_attempt::create($attempt->id);
-        $tosubmit   = array(1 => array('answer' => $answer));
-        $attemptobj->process_submitted_actions($timenow, false, $tosubmit);
-        return $attempt;
+        $attemptobj = \mod_quiz\quiz_attempt::create($attempt->id);
+        advanced_testcase::assertFalse($attemptobj->has_response_to_at_least_one_graded_question());
+        // The student has not answered any questions.
+        advanced_testcase::assertEquals(1, $attemptobj->get_number_of_unanswered_questions());
+
+        return $attemptobj;
     }
 
     /**
      * Finish quiz attempt.
-     * @param object|\stdClass $attempt
+     * @param object|\stdClass $attemptobj
      * @param int $timenow
+     * @param string $answer
+     *
      */
-    public static function finish_quiz_attempt($attempt, $timenow) {
-        $attemptobj = quiz_attempt::create($attempt->id);
+    public static function finish_quiz_attempt($attemptobj, $timenow, $answer) {
+        //$attemptobj = quiz_attempt::create($attempt->id);
+
+        $tosubmit = [1 => ['answer' => $answer]];
+        $attemptobj->process_submitted_actions($timenow, false, $tosubmit);
+
+        // The student has answered the question.
+        advanced_testcase::assertEquals(0, $attemptobj->get_number_of_unanswered_questions());
         advanced_testcase::assertTrue($attemptobj->has_response_to_at_least_one_graded_question());
         $attemptobj->process_finish($timenow, false);
     }
