@@ -28,8 +28,6 @@ namespace lytix_helper;
 global $CFG;
 require_once($CFG->dirroot . '/mod/quiz/locallib.php');
 
-use mod_quiz\plugininfo\quiz;
-use mod_quiz\quiz_attempt;
 
 /**
  * Class privacy_lib_test

@@ -42,6 +42,7 @@ use coding_exception;
 use completion_info;
 use context_module;
 use mod_quiz\plugininfo\quiz;
+use mod_quiz\quiz_attempt;
 use mod_quiz\quiz_settings;
 use question_engine;
 
@@ -185,8 +186,8 @@ class dummy {
      * @param false|mixed|\stdClass $course
      * @param string $type
      * @param string $marker
-     * @param false|mixed|\stdClass $startdate
-     * @param false|mixed|\stdClass $enddate
+     * @param int $startdate
+     * @param int $enddate
      * @param string $title
      * @param string $text
      * @param string $room
@@ -197,8 +198,8 @@ class dummy {
      * @return \stdClass
      * @throws \dml_exception
      */
-    public static function create_fake_planner_event(\stdClass $course, string $type, string $marker, \stdClass $startdate,
-                                                     \stdClass $enddate, string $title, string $text, string $room,
+    public static function create_fake_planner_event(\stdClass $course, string $type, string $marker, int $startdate,
+                                                     int $enddate, string $title, string $text, string $room,
                                                      int $visible = 0, int $mandatory = 0, int $graded = 0, int $send = 0) {
         global $DB;
 
@@ -374,12 +375,12 @@ class dummy {
 
     /**
      * Finish quiz attempt.
-     * @param object|\stdClass $attemptobj
+     * @param quiz_attempt|\stdClass $attemptobj
      * @param int $timenow
      * @param string $answer
      *
      */
-    public static function finish_quiz_attempt(\stdClass $attemptobj, int $timenow, string $answer) {
+    public static function finish_quiz_attempt(quiz_attempt $attemptobj, int $timenow, string $answer) {
         $tosubmit = [1 => ['answer' => $answer]];
         $attemptobj->process_submitted_actions($timenow, false, $tosubmit);
 
