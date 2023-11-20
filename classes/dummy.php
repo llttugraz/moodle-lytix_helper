@@ -31,6 +31,7 @@ require_once($CFG->libdir . '/gradelib.php');
 require_once($CFG->dirroot . '/course/lib.php');
 // Needed for the activities generators.
 require_once($CFG->dirroot . '/mod/assign/externallib.php');
+require_once($CFG->dirroot . '/mod/quiz/locallib.php');
 require_once($CFG->dirroot . '/mod/quiz/lib.php');
 require_once($CFG->dirroot . "/user/lib.php");
 
@@ -55,7 +56,7 @@ class dummy {
      * @throws \dml_exception
      * @throws \moodle_exception
      */
-    public static function create_fake_students($limit) {
+    public static function create_fake_students(int $limit) {
         global $DB, $CFG;
         $students = [];
         for ($i = 0; $i < $limit; $i++) {
@@ -86,7 +87,7 @@ class dummy {
      * @throws \dml_exception
      * @throws \moodle_exception
      */
-    public static function create_course_and_enrol_users($course, $students) {
+    public static function create_course_and_enrol_users(\stdClass $course, array $students) {
         global $DB;
         $newcourse = create_course($course);
         $courseid  = $newcourse->id;
@@ -118,7 +119,8 @@ class dummy {
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    public static function create_fake_data_for_course($date, $today, $student, $courseid, $context) {
+    public static function create_fake_data_for_course(\DateTime $date, \DateTime $today, \stdClass $student,
+                                                       int $courseid, \stdClass $context) {
         global $DB;
         $logstores = [];
 
@@ -195,8 +197,9 @@ class dummy {
      * @return \stdClass
      * @throws \dml_exception
      */
-    public static function create_fake_planner_event($course, $type, $marker, $startdate, $enddate, $title, $text, $room,
-                                                     $visible = 0, $mandatory = 0, $graded = 0, $send = 0) {
+    public static function create_fake_planner_event(\stdClass $course, string $type, string $marker, \stdClass $startdate,
+                                                     \stdClass $enddate, string $title, string $text, string $room,
+                                                     int $visible = 0, int $mandatory = 0, int $graded = 0, int $send = 0) {
         global $DB;
 
         $record            = new \stdClass();
@@ -228,7 +231,8 @@ class dummy {
      * @return \stdClass
      * @throws \dml_exception
      */
-    public static function complete_fake_planner_event($eventid, $courseid, $userid, $completed, $send, $timestamp) {
+    public static function complete_fake_planner_event(int $eventid, int $courseid, int $userid, int $completed,
+                                                       int $send, int $timestamp) {
         global $DB;
 
         $record            = new \stdClass();
@@ -260,9 +264,11 @@ class dummy {
      * @return \stdClass
      * @throws \dml_exception
      */
-    public static function create_fake_planner_milestone($course, $user, $type, $marker, $startdate, $enddate,
-                                                         $title = 'Title', $text = 'Text...', $offset = 3,
-                                                         $option = 'email', $completed = 0, $send = 0) {
+    public static function create_fake_planner_milestone(\stdClass $course, \stdClass $user, string $type,
+                                                         string $marker, int $startdate, int $enddate,
+                                                         string $title = 'Title', string $text = 'Text...',
+                                                         int $offset = 3, string $option = 'email',
+                                                         int $completed = 0, int $send = 0) {
         global $DB;
 
         $record            = new \stdClass();
@@ -289,7 +295,7 @@ class dummy {
      * @return bool
      * @throws \dml_exception
      */
-    public static function update_fake_planner_milestone($record) {
+    public static function update_fake_planner_milestone(\stdClass $record) {
         global $DB;
 
         return $DB->update_record('lytix_planner_milestone', $record);
@@ -324,7 +330,6 @@ class dummy {
      */
     public static function create_quiz_question(\stdClass $quiz) {
         // Create a numerical question.
-
         $questiongenerator = advanced_testcase::getDataGenerator()->get_plugin_generator('core_question');
 
         $cat = $questiongenerator->create_question_category();
@@ -374,9 +379,7 @@ class dummy {
      * @param string $answer
      *
      */
-    public static function finish_quiz_attempt($attemptobj, $timenow, $answer) {
-        //$attemptobj = quiz_attempt::create($attempt->id);
-
+    public static function finish_quiz_attempt(\stdClass $attemptobj, int $timenow, string $answer) {
         $tosubmit = [1 => ['answer' => $answer]];
         $attemptobj->process_submitted_actions($timenow, false, $tosubmit);
 
@@ -392,7 +395,7 @@ class dummy {
      * @return \stdClass|null
      * @throws \dml_exception
      */
-    public static function create_enrol_teacher($course) {
+    public static function create_enrol_teacher(\stdClass $course) {
         global $DB;
         $dg = advanced_testcase::getDataGenerator();
 
@@ -412,7 +415,7 @@ class dummy {
      * @return \stdClass|null
      * @throws \dml_exception
      */
-    public static function create_enrol_student($course, $email) {
+    public static function create_enrol_student(\stdClass $course, string $email) {
         global $DB;
         $dg = advanced_testcase::getDataGenerator();
 
@@ -430,7 +433,7 @@ class dummy {
      * @param \DateTime $semstart
      * @param \DateTime $semend
      */
-    public static function set_semester_start_and_end($semstart, $semend) {
+    public static function set_semester_start_and_end(\DateTime $semstart, \DateTime $semend) {
         $semstart->setTime(0, 0);
         set_config('semester_start', $semstart->format('Y-m-d'), 'local_lytix');
 
@@ -443,7 +446,7 @@ class dummy {
      * @param int $courseid
      * @param string $platform
      */
-    public static function add_course_and_set_plattform($courseid, $platform) {
+    public static function add_course_and_set_plattform(int $courseid, string $platform) {
         // Add course to config list.
         set_config('course_list', $courseid, 'local_lytix');
         // Set platform.
@@ -458,7 +461,7 @@ class dummy {
      * @return mixed
      * @throws \coding_exception
      */
-    public static function create_assign_instance($courseid, $duedate = 0, $allowsubmissionsfromdate = 0) {
+    public static function create_assign_instance(int $courseid, int $duedate = 0, int $allowsubmissionsfromdate = 0) {
         $dg = advanced_testcase::getDataGenerator();
 
         $generator                                 = $dg->get_plugin_generator('mod_assign');
@@ -518,7 +521,7 @@ class dummy {
      * @param mixed $module
      * @param null|\stdClass $user
      */
-    public static function complete_activity($course, $modulename, $module, $user) {
+    public static function complete_activity(\stdClass $course, string $modulename, $module, \stdClass $user) {
         $cm         = get_coursemodule_from_id($modulename, $module->cmid);
         $completion = new completion_info($course);
         $completion->update_state($cm, COMPLETION_COMPLETE, $user->id);
@@ -531,7 +534,7 @@ class dummy {
      * @param int $method
      * @throws coding_exception
      */
-    public static function set_aggregation_method($course, $method) {
+    public static function set_aggregation_method(\stdClass $course, int $method) {
         $aggdata     = array(
             'course'       => $course->id,
             'criteriatype' => COMPLETION_CRITERIA_TYPE_ACTIVITY
