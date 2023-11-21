@@ -12,11 +12,11 @@
         {
             "name": "Guenther Moser",
             "email": "moser@tugraz.at",
-			"role": "developer"
+            "role": "developer"
         }
     ],
     "require": {
-        "moodle/moodle": "4.1 - 4.3",
+        "moodle/moodle": "4.2 - 4.3",
         "llttugraz/moodle-local_lytix": "*"
     }
 }
