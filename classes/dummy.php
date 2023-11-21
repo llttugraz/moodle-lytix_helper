@@ -31,6 +31,7 @@ require_once($CFG->libdir . '/gradelib.php');
 require_once($CFG->dirroot . '/course/lib.php');
 // Needed for the activities generators.
 require_once($CFG->dirroot . '/mod/assign/externallib.php');
+require_once($CFG->dirroot . '/mod/quiz/locallib.php');
 require_once($CFG->dirroot . '/mod/quiz/lib.php');
 require_once($CFG->dirroot . "/user/lib.php");
 
@@ -40,10 +41,10 @@ use assign;
 use coding_exception;
 use completion_info;
 use context_module;
-use grade_item;
-use question_engine;
-use quiz;
 use quiz_attempt;
+use quiz;
+
+use question_engine;
 
 /**
  * This class generates dummy data.
@@ -56,7 +57,7 @@ class dummy {
      * @throws \dml_exception
      * @throws \moodle_exception
      */
-    public static function create_fake_students($limit) {
+    public static function create_fake_students(int $limit) {
         global $DB, $CFG;
         $students = [];
         for ($i = 0; $i < $limit; $i++) {
@@ -87,7 +88,7 @@ class dummy {
      * @throws \dml_exception
      * @throws \moodle_exception
      */
-    public static function create_course_and_enrol_users($course, $students) {
+    public static function create_course_and_enrol_users(\stdClass $course, array $students) {
         global $DB;
         $newcourse = create_course($course);
         $courseid  = $newcourse->id;
@@ -110,16 +111,18 @@ class dummy {
     }
 
     /**
-     * Creates fake activity data for course.
+     * * Creates fake activity data for course.
      * @param \DateTime $date
      * @param \DateTime $today
-     * @param false|mixed|\stdClass $student
+     * @param \stdClass $student
      * @param int $courseid
-     * @param false|mixed|\stdClass $context
-     * @throws \coding_exception
+     * @param \stdClass $context
+     * @return void
      * @throws \dml_exception
+     * @throws coding_exception
      */
-    public static function create_fake_data_for_course($date, $today, $student, $courseid, $context) {
+    public static function create_fake_data_for_course(\DateTime $date, \DateTime $today, \stdClass $student,
+                                                       int $courseid, \stdClass $context) {
         global $DB;
         $logstores = [];
 
@@ -181,11 +184,12 @@ class dummy {
 
     /**
      * Creates fake planner events for course.
-     * @param false|mixed|\stdClass $course
+     *
+     * @param \stdClass $course
      * @param string $type
      * @param string $marker
-     * @param false|mixed|\stdClass $startdate
-     * @param false|mixed|\stdClass $enddate
+     * @param int $startdate
+     * @param int $enddate
      * @param string $title
      * @param string $text
      * @param string $room
@@ -196,8 +200,9 @@ class dummy {
      * @return \stdClass
      * @throws \dml_exception
      */
-    public static function create_fake_planner_event($course, $type, $marker, $startdate, $enddate, $title, $text, $room,
-                                                     $visible = 0, $mandatory = 0, $graded = 0, $send = 0) {
+    public static function create_fake_planner_event(\stdClass $course, string $type, string $marker, int $startdate,
+                                                     int $enddate, string $title, string $text, string $room,
+                                                     int $visible = 0, int $mandatory = 0, int $graded = 0, int $send = 0) {
         global $DB;
 
         $record            = new \stdClass();
@@ -229,7 +234,8 @@ class dummy {
      * @return \stdClass
      * @throws \dml_exception
      */
-    public static function complete_fake_planner_event($eventid, $courseid, $userid, $completed, $send, $timestamp) {
+    public static function complete_fake_planner_event(int $eventid, int $courseid, int $userid, int $completed,
+                                                       int $send, int $timestamp) {
         global $DB;
 
         $record            = new \stdClass();
@@ -261,9 +267,11 @@ class dummy {
      * @return \stdClass
      * @throws \dml_exception
      */
-    public static function create_fake_planner_milestone($course, $user, $type, $marker, $startdate, $enddate,
-                                                         $title = 'Title', $text = 'Text...', $offset = 3,
-                                                         $option = 'email', $completed = 0, $send = 0) {
+    public static function create_fake_planner_milestone(\stdClass $course, \stdClass $user, string $type,
+                                                         string $marker, int $startdate, int $enddate,
+                                                         string $title = 'Title', string $text = 'Text...',
+                                                         int $offset = 3, string $option = 'email',
+                                                         int $completed = 0, int $send = 0) {
         global $DB;
 
         $record            = new \stdClass();
@@ -286,11 +294,12 @@ class dummy {
 
     /**
      * Updates an already created milestone.
-     * @param false|mixed|\stdClass $record
+     *
+     * @param \stdClass $record
      * @return bool
      * @throws \dml_exception
      */
-    public static function update_fake_planner_milestone($record) {
+    public static function update_fake_planner_milestone(\stdClass $record) {
         global $DB;
 
         return $DB->update_record('lytix_planner_milestone', $record);
@@ -298,98 +307,85 @@ class dummy {
 
     /**
      * Create a quiz.
-     * @param \stdClass|null $course
-     * @param int $maxgrade
-     * @param int $timeopen
-     * @param int $timeclose
-     * @return mixed
-     * @throws \coding_exception
+     *
+     * @param \stdClass $course
+     * @return \stdClass
+     * @throws coding_exception
      */
-    public static function create_quiz($course, $maxgrade, $timeopen = 0, $timeclose = 0) {
-        // Make a scale and an outcome.
-        $scale   = advanced_testcase::getDataGenerator()->create_scale();
-        $data    = array('courseid'  => $course->id,
-            'fullname'  => 'Quizzes',
-            'shortname' => 'Quizzes',
-            'scaleid'   => $scale->id);
-        $outcome = advanced_testcase::getDataGenerator()->create_grade_outcome($data);
-
-        // Make a quiz with the outcome on.
+    public static function create_quiz(\stdClass $course) {
+        // Make a quiz.
         $quizgenerator = advanced_testcase::getDataGenerator()->get_plugin_generator('mod_quiz');
-        $data          = array('course'                  => $course->id,
-            'outcome_' . $outcome->id => 1,
-            'grade'                   => $maxgrade,
-            'questionsperpage'        => 0,
-            'sumgrades'               => 1,
-            'completion'              => COMPLETION_TRACKING_MANUAL,
-            'completionpass'          => 1,
-            'timeopen'                => $timeopen,
-            'timeclose'               => $timeclose);
-        $quiz          = $quizgenerator->create_instance($data);
-        $cm            = get_coursemodule_from_id('quiz', $quiz->cmid);
+
+        $quiz = $quizgenerator->create_instance(['course' => $course->id, 'questionsperpage' => 0, 'grade' => 100.0,
+            'sumgrades' => 1]);
         return $quiz;
     }
 
     /**
      * Creates a quiz question.
-     * @param \stdClass|null $course
-     * @param mixed $quiz
-     * @param null|\stdClass $teacher
-     * @param int $gradepass
-     * @return quiz
-     * @throws \coding_exception
+     *
+     * @param \stdClass $quiz
+     * @return \stdClass
+     * @throws coding_exception
      */
-    public static function create_quiz_question($course, $quiz, $teacher, $gradepass) {
+    public static function create_quiz_question(\stdClass $quiz) {
         // Create a numerical question.
         $questiongenerator = advanced_testcase::getDataGenerator()->get_plugin_generator('core_question');
 
-        $cat      = $questiongenerator->create_question_category();
-        $question = $questiongenerator->create_question('numerical', null, array('category' => $cat->id));
-        quiz_add_quiz_question($question->id, $quiz);
+        $cat = $questiongenerator->create_question_category();
+        $numq = $questiongenerator->create_question('numerical', null, ['category' => $cat->id]);
 
-        $quizobj = quiz::create($quiz->id, $teacher->id);
+        // Add question to the quiz.
+        quiz_add_quiz_question($numq->id, $quiz);
 
-        // Set grade to pass.
-        $item            = grade_item::fetch(array('courseid'   => $course->id, 'itemtype' => 'mod',
-            'itemmodule' => 'quiz', 'iteminstance' => $quiz->id, 'outcomeid' => null));
-        $item->gradepass = $gradepass;
-        $item->update();
-
-        return $quizobj;
+        return $quiz;
     }
 
     /**
      * Create a quiz attempt.
-     * @param mixed $quizobj
+     * @param null|\stdClass $quiz
      * @param null|\stdClass $student
      * @param int $timenow
-     * @param int $answer
      * @return object|\stdClass
      * @throws \moodle_exception
      */
-    public static function create_quiz_attempt($quizobj, $student, $timenow, $answer) {
+    public static function create_quiz_attempt(\stdClass $quiz, \stdClass $student, int $timenow) {
+        $quizobj = quiz::create($quiz->id, $student->id);
+
+        // Start the attempt.
         $quba = question_engine::make_questions_usage_by_activity('mod_quiz', $quizobj->get_context());
         $quba->set_preferred_behaviour($quizobj->get_quiz()->preferredbehaviour);
 
-        $attempt = quiz_create_attempt(
-            $quizobj, 1, false, $timenow, false, $student->id);
+        $attempt = quiz_create_attempt($quizobj, 1, false, $timenow, false, $student->id);
+
         quiz_start_new_attempt($quizobj, $quba, $attempt, 1, $timenow);
+        advanced_testcase::assertEquals('1,0', $attempt->layout);
+
         quiz_attempt_save_started($quizobj, $quba, $attempt);
 
         // Process some responses from the student.
         $attemptobj = quiz_attempt::create($attempt->id);
-        $tosubmit   = array(1 => array('answer' => $answer));
-        $attemptobj->process_submitted_actions($timenow, false, $tosubmit);
-        return $attempt;
+        advanced_testcase::assertFalse($attemptobj->has_response_to_at_least_one_graded_question());
+        // The student has not answered any questions.
+        advanced_testcase::assertEquals(1, $attemptobj->get_number_of_unanswered_questions());
+
+        return $attemptobj;
     }
 
     /**
      * Finish quiz attempt.
-     * @param object|\stdClass $attempt
+     *
+     * @param quiz_attempt|null $attemptobj
      * @param int $timenow
+     * @param string $answer
+     * @return void
      */
-    public static function finish_quiz_attempt($attempt, $timenow) {
-        $attemptobj = quiz_attempt::create($attempt->id);
+    public static function finish_quiz_attempt(?quiz_attempt $attemptobj, int $timenow, string $answer) {
+        $tosubmit = [1 => ['answer' => $answer]];
+        $attemptobj->process_submitted_actions($timenow, false, $tosubmit);
+
+        // The student has answered the question.
+        advanced_testcase::assertEquals(0, $attemptobj->get_number_of_unanswered_questions());
         advanced_testcase::assertTrue($attemptobj->has_response_to_at_least_one_graded_question());
         $attemptobj->process_finish($timenow, false);
     }
@@ -400,7 +396,7 @@ class dummy {
      * @return \stdClass|null
      * @throws \dml_exception
      */
-    public static function create_enrol_teacher($course) {
+    public static function create_enrol_teacher(\stdClass $course) {
         global $DB;
         $dg = advanced_testcase::getDataGenerator();
 
@@ -420,7 +416,7 @@ class dummy {
      * @return \stdClass|null
      * @throws \dml_exception
      */
-    public static function create_enrol_student($course, $email) {
+    public static function create_enrol_student(\stdClass $course, string $email) {
         global $DB;
         $dg = advanced_testcase::getDataGenerator();
 
@@ -438,7 +434,7 @@ class dummy {
      * @param \DateTime $semstart
      * @param \DateTime $semend
      */
-    public static function set_semester_start_and_end($semstart, $semend) {
+    public static function set_semester_start_and_end(\DateTime $semstart, \DateTime $semend) {
         $semstart->setTime(0, 0);
         set_config('semester_start', $semstart->format('Y-m-d'), 'local_lytix');
 
@@ -451,7 +447,7 @@ class dummy {
      * @param int $courseid
      * @param string $platform
      */
-    public static function add_course_and_set_plattform($courseid, $platform) {
+    public static function add_course_and_set_plattform(int $courseid, string $platform) {
         // Add course to config list.
         set_config('course_list', $courseid, 'local_lytix');
         // Set platform.
@@ -466,7 +462,7 @@ class dummy {
      * @return mixed
      * @throws \coding_exception
      */
-    public static function create_assign_instance($courseid, $duedate = 0, $allowsubmissionsfromdate = 0) {
+    public static function create_assign_instance(int $courseid, int $duedate = 0, int $allowsubmissionsfromdate = 0) {
         $dg = advanced_testcase::getDataGenerator();
 
         $generator                                 = $dg->get_plugin_generator('mod_assign');
@@ -526,7 +522,7 @@ class dummy {
      * @param mixed $module
      * @param null|\stdClass $user
      */
-    public static function complete_activity($course, $modulename, $module, $user) {
+    public static function complete_activity(\stdClass $course, string $modulename, $module, \stdClass $user) {
         $cm         = get_coursemodule_from_id($modulename, $module->cmid);
         $completion = new completion_info($course);
         $completion->update_state($cm, COMPLETION_COMPLETE, $user->id);
@@ -539,7 +535,7 @@ class dummy {
      * @param int $method
      * @throws coding_exception
      */
-    public static function set_aggregation_method($course, $method) {
+    public static function set_aggregation_method(\stdClass $course, int $method) {
         $aggdata     = array(
             'course'       => $course->id,
             'criteriatype' => COMPLETION_CRITERIA_TYPE_ACTIVITY

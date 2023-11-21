@@ -249,7 +249,7 @@ class aggregate_user_activities_test extends \advanced_testcase {
      * @throws \Exception
      */
     private function generate_random_string ($length) {
-        $randombytes = random_bytes(($length + 1) / 2);
+        $randombytes = random_bytes(floor(($length + 1) / 2));
         $randomstring = substr(bin2hex($randombytes), 0, $length);
 
         return $randomstring;
