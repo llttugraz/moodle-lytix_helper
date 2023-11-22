@@ -317,7 +317,7 @@ class dummy {
         $quizgenerator = advanced_testcase::getDataGenerator()->get_plugin_generator('mod_quiz');
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'questionsperpage' => 0, 'grade' => 100.0,
-            'sumgrades' => 1]);
+            'sumgrades' => 1, 'completion' => COMPLETION_ENABLED]);
         return $quiz;
     }
 
