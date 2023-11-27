@@ -375,7 +375,7 @@ class dummy {
     /**
      * Finish quiz attempt.
      *
-     * @param quiz_attempt|null $attemptobj
+     * @param object|\stdClass $attemptobj
      * @param int $timenow
      * @param string $answer
      * @return void
