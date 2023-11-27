@@ -380,7 +380,7 @@ class dummy {
      * @param string $answer
      * @return void
      */
-    public static function finish_quiz_attempt(?quiz_attempt $attemptobj, int $timenow, string $answer) {
+    public static function finish_quiz_attempt(?\stdClass $attemptobj, int $timenow, string $answer) {
         $tosubmit = [1 => ['answer' => $answer]];
         $attemptobj->process_submitted_actions($timenow, false, $tosubmit);
 
