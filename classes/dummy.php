@@ -375,12 +375,12 @@ class dummy {
     /**
      * Finish quiz attempt.
      *
-     * @param object|\stdClass $attemptobj
+     * @param quiz_attempt $attemptobj
      * @param int $timenow
      * @param string $answer
      * @return void
      */
-    public static function finish_quiz_attempt(?\stdClass $attemptobj, int $timenow, string $answer) {
+    public static function finish_quiz_attempt(quiz_attempt $attemptobj, int $timenow, string $answer) {
         $tosubmit = [1 => ['answer' => $answer]];
         $attemptobj->process_submitted_actions($timenow, false, $tosubmit);
 
