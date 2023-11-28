@@ -32,5 +32,5 @@ $plugin->component = 'lytix_helper'; // Full name of the plugin.
 $plugin->dependencies = [
     'lytix_logs' => ANY_VERSION
 ];
-$plugin->release   = 'v1.1.3';
+$plugin->release   = 'v1.1.4';
 $plugin->supported = [401, 401];
