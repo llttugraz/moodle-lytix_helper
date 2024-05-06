@@ -56,3 +56,5 @@ $string['privacy:metadata:lytix_helper_dly_mdl_acty:h5p_time'] = "Vrijeme proved
 $string['privacy:metadata:lytix_helper_dly_mdl_acty:h5p_click'] = "Broj klikova na h5p";
 $string['privacy:metadata:lytix_helper_dly_mdl_acty:feedback_time'] = "Vrijeme provedeno na završnom upitniku";
 $string['privacy:metadata:lytix_helper_dly_mdl_acty:feedback_click'] = "Broj klikova na završni upitnik";
+$string['clicks'] = 'Klikovi';
+$string['time'] = 'Vrijeme';
