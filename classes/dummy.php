@@ -41,9 +41,8 @@ use assign;
 use coding_exception;
 use completion_info;
 use context_module;
-use quiz_attempt;
-use quiz;
-
+use mod_quiz\quiz_attempt;
+use mod_quiz\quiz_settings;
 use question_engine;
 
 /**
@@ -350,7 +349,7 @@ class dummy {
      * @throws \moodle_exception
      */
     public static function create_quiz_attempt(\stdClass $quiz, \stdClass $student, int $timenow) {
-        $quizobj = quiz::create($quiz->id, $student->id);
+        $quizobj = quiz_settings::create($quiz->id, $student->id);
 
         // Start the attempt.
         $quba = question_engine::make_questions_usage_by_activity('mod_quiz', $quizobj->get_context());
@@ -364,7 +363,7 @@ class dummy {
         quiz_attempt_save_started($quizobj, $quba, $attempt);
 
         // Process some responses from the student.
-        $attemptobj = quiz_attempt::create($attempt->id);
+        $attemptobj = \mod_quiz\quiz_attempt::create($attempt->id);
         advanced_testcase::assertFalse($attemptobj->has_response_to_at_least_one_graded_question());
         // The student has not answered any questions.
         advanced_testcase::assertEquals(1, $attemptobj->get_number_of_unanswered_questions());
@@ -375,12 +374,12 @@ class dummy {
     /**
      * Finish quiz attempt.
      *
-     * @param quiz_attempt|null $attemptobj
+     * @param quiz_attempt $attemptobj
      * @param int $timenow
      * @param string $answer
      * @return void
      */
-    public static function finish_quiz_attempt(?quiz_attempt $attemptobj, int $timenow, string $answer) {
+    public static function finish_quiz_attempt(quiz_attempt $attemptobj, int $timenow, string $answer) {
         $tosubmit = [1 => ['answer' => $answer]];
         $attemptobj->process_submitted_actions($timenow, false, $tosubmit);
 
