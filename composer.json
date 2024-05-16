@@ -12,7 +12,7 @@
         {
             "name": "Guenther Moser",
             "email": "moser@tugraz.at",
-			"role": "developer"
+            "role": "developer"
         }
     ],
     "require": {
