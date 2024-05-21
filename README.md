@@ -3,12 +3,17 @@
 This plugin is a subplugin of [local_lytix](https://github.com/llttugraz/moodle-local_lytix).
 The `lytix_helper` plugin acts as a central repository for all auxiliary classes and functionalities used across various modules in the Moodle system. It streamlines various operations, from calculations to form handling, ensuring a consistent and efficient approach throughout the system.
 
+## Versions
+
+If you need compatibility with Moodle 4.1 you should select releases below version 2.0.0, or checkout branch `moodle-4.1`.
+
 ## Installation
 
-1. Download the plugin and extract the files.
-2. Move the extracted folder to your `moodle/local/lytix/modules` directory.
-3. Log in as an admin in Moodle and navigate to `Site Administration > Plugins > Install plugins`.
-4. Follow the on-screen instructions to complete the installation.
+1. Choose the right version.
+2. Download the plugin and extract the files.
+3. Move the extracted folder to your `moodle/local/lytix/modules` directory.
+4. Log in as an admin in Moodle and navigate to `Site Administration > Plugins > Install plugins`.
+5. Follow the on-screen instructions to complete the installation.
 
 ## Requirements
 
