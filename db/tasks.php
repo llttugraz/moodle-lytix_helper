@@ -26,18 +26,18 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-$tasks = array(
+$tasks = [
     // Cronjob to store the click events into the DB.
-    array(
+    [
         'classname' => 'lytix_helper\task\aggregate_user_activities',
         'blocking' => 0,
         'minute' => '00',
         'hour' => '3',
         'day' => '*',
         'dayofweek' => '*',
-        'month' => '*'
-    ),
+        'month' => '*',
+    ],
 
     // NOTE add tasks as needed.
-);
+];
 

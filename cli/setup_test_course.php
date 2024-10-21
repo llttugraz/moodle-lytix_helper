@@ -75,7 +75,7 @@ for ($i = 0; $i < $numberofstudents; $i++) {
 }
 
 // Create test course.
-if (!$DB->record_exists('course', array('shortname' => $courseshortname))) {
+if (!$DB->record_exists('course', ['shortname' => $courseshortname])) {
     $course            = new stdClass();
     $course->fullname  = $coursefullname;
     $course->shortname = $courseshortname;

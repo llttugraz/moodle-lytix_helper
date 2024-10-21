@@ -30,12 +30,13 @@ namespace lytix_helper;
  * Class privacy_lib_test
  * @coversDefaultClass \lytix_helper\calculation_helper
  */
-class calculation_helper_test extends \advanced_testcase {
+final class calculation_helper_test extends \advanced_testcase {
 
     /**
      * Basic setup for these tests.
      */
     public function setUp(): void {
+        parent::setUp();
         $this->resetAfterTest();
     }
 
@@ -64,27 +65,27 @@ class calculation_helper_test extends \advanced_testcase {
      * @covers ::median
      * @return void
      */
-    public function test_median() {
+    public function test_median(): void {
         // Test case: Empty array.
-        $numbers = array();
+        $numbers = [];
         $expected = 0;
         $actual = calculation_helper::median($numbers);
         $this->assertEquals($expected, $actual);
 
         // Test case: Odd number of elements.
-        $numbers = array(1, 3, 5, 7, 9);
+        $numbers = [1, 3, 5, 7, 9];
         $expected = 5;
         $actual = calculation_helper::median($numbers);
         $this->assertEquals($expected, $actual);
 
         // Test case: Even number of elements.
-        $numbers = array(2, 4, 6, 8);
+        $numbers = [2, 4, 6, 8];
         $expected = 5;
         $actual = calculation_helper::median($numbers);
         $this->assertEquals($expected, $actual);
 
         // Test case: Non-numeric elements.
-        $numbers = array('a', 'b', 'c');
+        $numbers = ['a', 'b', 'c'];
         $expected = 'b';
         $actual = calculation_helper::median($numbers);
         $this->assertEquals($expected, $actual);
@@ -95,27 +96,27 @@ class calculation_helper_test extends \advanced_testcase {
      * @covers ::mean
      * @return void
      */
-    public function test_mean() {
+    public function test_mean(): void {
         // Test case: Empty array.
-        $numbers = array();
+        $numbers = [];
         $expected = 0.00;
         $actual = calculation_helper::mean($numbers);
         $this->assertEquals($expected, $actual);
 
         // Test case: Array with positive numbers.
-        $numbers = array(1, 2, 3, 4, 5);
+        $numbers = [1, 2, 3, 4, 5];
         $expected = 3.00;
         $actual = calculation_helper::mean($numbers);
         $this->assertEquals($expected, $actual);
 
         // Test case: Array with negative numbers.
-        $numbers = array(-1, -2, -3, -4, -5);
+        $numbers = [-1, -2, -3, -4, -5];
         $expected = -3.00;
         $actual = calculation_helper::mean($numbers);
         $this->assertEquals($expected, $actual);
 
         // Test case: Array with mixed positive and negative numbers.
-        $numbers = array(-2, 4, -6, 8, -10);
+        $numbers = [-2, 4, -6, 8, -10];
         $expected = -1.20;
         $actual = calculation_helper::mean($numbers);
         $this->assertEquals($expected, $actual);
@@ -126,7 +127,7 @@ class calculation_helper_test extends \advanced_testcase {
      * @covers ::div
      * @return void
      */
-    public function test_div() {
+    public function test_div(): void {
         // Test case: Divisor is not zero.
         $divident = 10;
         $divisor = 2;
@@ -162,7 +163,7 @@ class calculation_helper_test extends \advanced_testcase {
      *
      * @return void
      */
-    public function test_get_activity_aggregation() {
+    public function test_get_activity_aggregation(): void {
         $course = new \stdClass();
         $course->fullname = 'Get Acticity Aggregation';
         $course->shortname = 'get_activity_aggregation';

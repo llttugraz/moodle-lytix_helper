@@ -29,12 +29,13 @@ namespace lytix_helper;
  * Class privacy_lib_test
  * @coversDefaultClass \lytix_helper\course_settings
  */
-class course_settings_test extends \advanced_testcase {
+final class course_settings_test extends \advanced_testcase {
 
     /**
      * Basic setup for these tests.
      */
     public function setUp(): void {
+        parent::setUp();
         $this->resetAfterTest();
     }
 
@@ -44,7 +45,7 @@ class course_settings_test extends \advanced_testcase {
      * @return void
      * @throws \dml_exception
      */
-    public function test_getcoursestartdate() {
+    public function test_getcoursestartdate(): void {
         // Course has no date, use semester date.
         $now = new \DateTime('now');
         set_config('semester_start', $now->format('Y-m-d'), 'local_lytix');
@@ -67,7 +68,7 @@ class course_settings_test extends \advanced_testcase {
      * @return void
      * @throws \dml_exception
      */
-    public function test_getcourseenddate() {
+    public function test_getcourseenddate(): void {
         // Course has no date, use semester date.
         $now = new \DateTime('now');
         set_config('semester_end', $now->format('Y-m-d'), 'local_lytix');
