@@ -29,5 +29,5 @@ $plugin->version = 2024052101;
 $plugin->maturity = MATURITY_STABLE;
 $plugin->requires = 2022112800.00; // Requires this Moodle version 4.1.
 $plugin->component = 'lytix_helper';
-$plugin->release = 'v2.0.3';
+$plugin->release = 'v2.0.4';
 $plugin->supported = [402, 405];
