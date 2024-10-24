@@ -5,7 +5,7 @@ The `lytix_helper` plugin acts as a central repository for all auxiliary classes
 
 ## Versions
 
-If you need compatibility with Moodle 4.1 you should select releases below version 2.0.0, or checkout branch `moodle-4.1`.
+If you need **compatibility with Moodle 4.1** you should select releases below version 2.0.0, or checkout branch `moodle-4.1`.
 
 ## Installation
 
@@ -17,8 +17,8 @@ If you need compatibility with Moodle 4.1 you should select releases below versi
 
 ## Requirements
 
-- Moodle Version: 4.1
-- PHP Version: 7.4, 8.0, 8.1
+- Moodle Version: 4.1+
+- PHP Version: 7.4+
 - Supported Databases: MariaDB, PostgreSQL
 - Supported Moodle Themes: Boost
 
@@ -32,11 +32,51 @@ If you need compatibility with Moodle 4.1 you should select releases below versi
 - Comes equipped with functionalities related to form handling in Moodle, encapsulated within `forms_helper.php`.
 - The `types.php` file encompasses various type definitions or constants utilized in other parts of the plugin.
 
+## Configuration
+
+No settings for the subplugin are available.
+
+## Usage
+
+This module provides only backend functionalities.
+
+## API Documentation
+
+No API.
+
+## Privacy
+
+The following personal data of each user are stored if the functionality of LYTIX for a course is enabled:
+
+| Entry            | Description                  |
+|------------------|------------------------------|
+| userid           | The ID of the user           |
+| courseid         | The ID of the course         |
+| bbb_click        | Click in BBB                 |
+| bbb_time         | Time in BBB                  |
+| contextid        | Contextid                    |
+| core_click       | Clicks in Course             |
+| core_time        | Time in Course               |
+| feedback_click   | Clicks in Feedback           |
+| feedback_time    | Time in Feedback             |
+| forum_click      | Clicks in Forum              |
+| forum_time       | Time in Forum                |
+| grade_click      | Clicks in Gradebook          |
+| grade_time       | Time in Gradebook            |
+| h5p_click        | Clicks in h5p                |
+| h5p_time         | Time in h5p                  |
+| quiz_click       | Clicks in Quiz               |
+| quiz_time        | Time in Quiz                 |
+| resource_click   | Clicks in Resource           |
+| resource_time    | Time in Resource             |
+| submission_click | Clicks in Submission         |
+| submission_time  | Time in Submission           |
+| timestamp        | Timestamp                    |
+
+
 ## Dependencies
 
-- [local_lytix](https://github.com/llttugraz/moodle-local_lytix).
-- [lytix_config](https://github.com/llttugraz/moodle-lytix_config).
-- [lytix_logs](https://github.com/llttugraz/moodle-lytix_logs).
+- [local_lytix](https://github.com/llttugraz/moodle-local_lytix)
 
 ## License
 
