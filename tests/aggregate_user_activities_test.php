@@ -125,6 +125,15 @@ final class aggregate_user_activities_test extends \advanced_testcase {
 
         $dlys = $DB->get_records('lytix_helper_dly_mdl_acty', ['courseid' => $this->course->id]);
         self::assertEquals($this->usercount * $this->days, count($dlys), "");
+
+        // Update 2024-11-05: This test is extended for cleanup (implemented in local_lytix).
+        $DB->insert_record('lytix_helper_last_aggreg', ['courseid' => $this->course->id,
+                'userid' => $this->students[0]->id, 'contextid' => 1, 'timestamp' => 1]);
+        delete_user($this->students[0]);
+        self::assertEquals(0, $DB->count_records('lytix_helper_last_aggreg'));
+
+        delete_course($this->course->id, false);
+        self::assertEquals(0, $DB->count_records('lytix_helper_dly_mdl_acty', ['courseid' => $this->course->id]));
     }
 
     /**
