@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Choose and download exam backups
  *
@@ -29,7 +30,7 @@ use core_privacy\local\request\approved_userlist;
 use core_privacy\local\request\contextlist;
 use core_privacy\local\request\userlist;
 use core_privacy\tests\request\content_writer;
-use \core_privacy\local\request\writer;
+use core_privacy\local\request\writer;
 
 
 /**
@@ -47,14 +48,14 @@ class provider implements
      * @param collection $collection empty collection of tables for column translation
      * @return  collection the translated userdata
      */
-    public static function get_metadata(collection $collection) : collection {
+    public static function get_metadata(collection $collection): collection {
 
         $collection->add_database_table("lytix_helper_last_aggreg",
             [
                 "userid" => "privacy:metadata:lytix_helper_last_aggreg:userid",
                 "courseid" => "privacy:metadata:lytix_helper_last_aggreg:courseid",
                 "contextid" => "privacy:metadata:lytix_helper_last_aggreg:contextid",
-                "timestamp" => "privacy:metadata:lytix_helper_last_aggreg:timestamp"
+                "timestamp" => "privacy:metadata:lytix_helper_last_aggreg:timestamp",
             ], "privacy:metadata:lytix_helper_last_aggreg"
         );
 
@@ -81,7 +82,7 @@ class provider implements
                 "h5p_time" => "privacy:metadata:lytix_helper_dly_mdl_acty:h5p_time",
                 "h5p_click" => "privacy:metadata:lytix_helper_dly_mdl_acty:h5p_click",
                 "feedback_time" => "privacy:metadata:lytix_helper_dly_mdl_acty:feedback_time",
-                "feedback_click" => "privacy:metadata:lytix_helper_dly_mdl_acty:feedback_click"
+                "feedback_click" => "privacy:metadata:lytix_helper_dly_mdl_acty:feedback_click",
             ], "privacy:metadata:lytix_helper_dly_mdl_acty"
         );
 
@@ -155,7 +156,7 @@ class provider implements
         // This CONTEXT_SYSTEM could be $userlist->contextid.
         $params = [
             "contextlevel" => CONTEXT_COURSE,
-            "userid" => $contextlist->get_user()->id
+            "userid" => $contextlist->get_user()->id,
         ];
         $dataset = $DB->get_records_sql($courseids, $params);
 
@@ -189,13 +190,13 @@ class provider implements
 
         $params = [
             "contextlevel" => CONTEXT_SYSTEM,
-            "userid" => $userid
+            "userid" => $userid,
         ];
         $contextlist->add_from_sql($roleassignments, $params);
 
         $params = [
             "contextlevel" => CONTEXT_COURSE,
-            "userid" => $userid
+            "userid" => $userid,
         ];
         $contextlist->add_from_sql($roleassignments, $params);
 

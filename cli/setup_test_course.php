@@ -27,7 +27,7 @@ use lytix_helper\dummy;
 
 define('CLI_SCRIPT', true);
 
-require(__DIR__ . '/../../../config.php');
+require(__DIR__ . '/../../../../../config.php');
 
 global $CFG, $DB;
 require_once($CFG->libdir . '/clilib.php');
@@ -75,7 +75,7 @@ for ($i = 0; $i < $numberofstudents; $i++) {
 }
 
 // Create test course.
-if (!$DB->record_exists('course', array('shortname' => $courseshortname))) {
+if (!$DB->record_exists('course', ['shortname' => $courseshortname])) {
     $course            = new stdClass();
     $course->fullname  = $coursefullname;
     $course->shortname = $courseshortname;

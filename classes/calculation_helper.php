@@ -34,7 +34,7 @@ class calculation_helper {
      * @param array $numbers
      * @return int|mixed
      */
-    public static function median($numbers = array()) {
+    public static function median($numbers = []) {
         if (!is_array($numbers) || empty($numbers)) {
             return 0;
         }
@@ -49,7 +49,7 @@ class calculation_helper {
      * @param array $numbers
      * @return float|int
      */
-    public static function mean($numbers = array()) {
+    public static function mean($numbers = []) {
         $sum = 0.0;
         foreach ($numbers as $number) {
             $sum += $number;

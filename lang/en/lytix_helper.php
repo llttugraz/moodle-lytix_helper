@@ -23,50 +23,42 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Lytix Helper';
-
-$string['privacy:metadata'] = 'This plugin does not store any data.';
-
-$string['time'] = 'Time';
 $string['clicks'] = 'Clicks';
-
-// Tasks.
 $string['cron_aggregate_user_activities'] = "Aggregate user activities for Lytix";
-
-// Errors & Warnings.
+$string['fetch_failed'] = 'The required data could not be fetched. Reload the page to try again.';
 $string['generic_error'] = 'Something went wrong. Please try reloading the page or report this incident if the error persists.';
 $string['no_data_available'] = 'There is not enough data available yet.';
-$string['fetch_failed'] = 'The required data could not be fetched. Reload the page to try again.';
-$string['template_render_error'] = 'There was an internal error. Please contact the support team about this.';
-
-// Privacy.
-$string['privacy:metadata:lytix_helper_last_aggreg'] = "In order to track all activities of the users, we need to save some user related data";
-$string['privacy:metadata:lytix_helper_last_aggreg:userid'] = "The user ID will be saved for uniquely identifying the user";
-$string['privacy:metadata:lytix_helper_last_aggreg:courseid'] = "The course ID will be saved for knowing to which course
- the data belongs to";
-$string['privacy:metadata:lytix_helper_last_aggreg:contextid'] = "Contextid";
-$string['privacy:metadata:lytix_helper_last_aggreg:timestamp'] = "Timestamp";
+$string['pluginname'] = 'Lytix Helper';
+$string['privacy:metadata'] = 'This plugin does not store any data.';
 $string['privacy:metadata:lytix_helper_dly_mdl_acty'] = "In order to track all activities of the users, we need to save some user related data";
-$string['privacy:metadata:lytix_helper_dly_mdl_acty:userid'] = "The user ID will be saved for uniquely identifying the user";
+$string['privacy:metadata:lytix_helper_dly_mdl_acty:bbb_click'] = "Click in BBB";
+$string['privacy:metadata:lytix_helper_dly_mdl_acty:bbb_time'] = "Time in BBB";
+$string['privacy:metadata:lytix_helper_dly_mdl_acty:contextid'] = "Contextid";
+$string['privacy:metadata:lytix_helper_dly_mdl_acty:core_click'] = "Clicks in Course";
+$string['privacy:metadata:lytix_helper_dly_mdl_acty:core_time'] = "Time in Course";
 $string['privacy:metadata:lytix_helper_dly_mdl_acty:courseid'] = "The course ID will be saved for knowing to which course
  the data belongs to";
-$string['privacy:metadata:lytix_helper_dly_mdl_acty:contextid'] = "Contextid";
-$string['privacy:metadata:lytix_helper_dly_mdl_acty:timestamp'] = "Timestamp";
-$string['privacy:metadata:lytix_helper_dly_mdl_acty:core_time'] = "Time in Course";
-$string['privacy:metadata:lytix_helper_dly_mdl_acty:core_click'] = "Clicks in Course";
-$string['privacy:metadata:lytix_helper_dly_mdl_acty:forum_time'] = "Time in Forum";
-$string['privacy:metadata:lytix_helper_dly_mdl_acty:forum_click'] = "Clicks in Forum";
-$string['privacy:metadata:lytix_helper_dly_mdl_acty:grade_time'] = "Time in Gradebook";
-$string['privacy:metadata:lytix_helper_dly_mdl_acty:grade_click'] = "Clicks in Gradebook";
-$string['privacy:metadata:lytix_helper_dly_mdl_acty:submission_time'] = "Time in Submission";
-$string['privacy:metadata:lytix_helper_dly_mdl_acty:submission_click'] = "Clicks in Submission";
-$string['privacy:metadata:lytix_helper_dly_mdl_acty:resource_time'] = "Time in Resource";
-$string['privacy:metadata:lytix_helper_dly_mdl_acty:resource_click'] = "Clicks in Resource";
-$string['privacy:metadata:lytix_helper_dly_mdl_acty:quiz_time'] = "Time in Quiz";
-$string['privacy:metadata:lytix_helper_dly_mdl_acty:quiz_click'] = "Clicks in Quiz";
-$string['privacy:metadata:lytix_helper_dly_mdl_acty:bbb_time'] = "Time in BBB";
-$string['privacy:metadata:lytix_helper_dly_mdl_acty:bbb_click'] = "Click in BBB";
-$string['privacy:metadata:lytix_helper_dly_mdl_acty:h5p_time'] = "Time in h5p";
-$string['privacy:metadata:lytix_helper_dly_mdl_acty:h5p_click'] = "Clicks in h5p";
-$string['privacy:metadata:lytix_helper_dly_mdl_acty:feedback_time'] = "Time in Feedback";
 $string['privacy:metadata:lytix_helper_dly_mdl_acty:feedback_click'] = "Clicks in Feedback";
+$string['privacy:metadata:lytix_helper_dly_mdl_acty:feedback_time'] = "Time in Feedback";
+$string['privacy:metadata:lytix_helper_dly_mdl_acty:forum_click'] = "Clicks in Forum";
+$string['privacy:metadata:lytix_helper_dly_mdl_acty:forum_time'] = "Time in Forum";
+$string['privacy:metadata:lytix_helper_dly_mdl_acty:grade_click'] = "Clicks in Gradebook";
+$string['privacy:metadata:lytix_helper_dly_mdl_acty:grade_time'] = "Time in Gradebook";
+$string['privacy:metadata:lytix_helper_dly_mdl_acty:h5p_click'] = "Clicks in h5p";
+$string['privacy:metadata:lytix_helper_dly_mdl_acty:h5p_time'] = "Time in h5p";
+$string['privacy:metadata:lytix_helper_dly_mdl_acty:quiz_click'] = "Clicks in Quiz";
+$string['privacy:metadata:lytix_helper_dly_mdl_acty:quiz_time'] = "Time in Quiz";
+$string['privacy:metadata:lytix_helper_dly_mdl_acty:resource_click'] = "Clicks in Resource";
+$string['privacy:metadata:lytix_helper_dly_mdl_acty:resource_time'] = "Time in Resource";
+$string['privacy:metadata:lytix_helper_dly_mdl_acty:submission_click'] = "Clicks in Submission";
+$string['privacy:metadata:lytix_helper_dly_mdl_acty:submission_time'] = "Time in Submission";
+$string['privacy:metadata:lytix_helper_dly_mdl_acty:timestamp'] = "Timestamp";
+$string['privacy:metadata:lytix_helper_dly_mdl_acty:userid'] = "The user ID will be saved for uniquely identifying the user";
+$string['privacy:metadata:lytix_helper_last_aggreg'] = "In order to track all activities of the users, we need to save some user related data";
+$string['privacy:metadata:lytix_helper_last_aggreg:contextid'] = "Contextid";
+$string['privacy:metadata:lytix_helper_last_aggreg:courseid'] = "The course ID will be saved for knowing to which course
+ the data belongs to";
+$string['privacy:metadata:lytix_helper_last_aggreg:timestamp'] = "Timestamp";
+$string['privacy:metadata:lytix_helper_last_aggreg:userid'] = "The user ID will be saved for uniquely identifying the user";
+$string['template_render_error'] = 'There was an internal error. Please contact the support team about this.';
+$string['time'] = 'Time';

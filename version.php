@@ -25,12 +25,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2024052101;
+$plugin->version = 2024111100;
 $plugin->maturity = MATURITY_STABLE;
 $plugin->requires = 2022112800.00; // Requires this Moodle version 4.1.
 $plugin->component = 'lytix_helper';
-$plugin->dependencies = [
-    'lytix_logs' => ANY_VERSION,
-];
-$plugin->release = 'v2.0.3';
-$plugin->supported = [402, 403];
+$plugin->release = 'v2.0.4';
+$plugin->supported = [402, 405];

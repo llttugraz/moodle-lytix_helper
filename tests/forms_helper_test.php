@@ -29,12 +29,13 @@ namespace lytix_helper;
  * Class privacy_lib_test
  * @coversDefaultClass \lytix_helper\forms_helper
  */
-class forms_helper_test extends \advanced_testcase {
+final class forms_helper_test extends \advanced_testcase {
 
     /**
      * Basic setup for these tests.
      */
     public function setUp(): void {
+        parent::setUp();
         $this->resetAfterTest();
     }
 
@@ -44,7 +45,7 @@ class forms_helper_test extends \advanced_testcase {
      * @return void
      * @throws \dml_exception
      */
-    public function test_get_semester_start_year() {
+    public function test_get_semester_start_year(): void {
         $now = new \DateTime('now');
         set_config('semester_start', $now->format('Y-m-d'), 'local_lytix');
         $year = forms_helper::get_semester_start_year();
@@ -57,7 +58,7 @@ class forms_helper_test extends \advanced_testcase {
      * @return void
      * @throws \dml_exception
      */
-    public function test_get_semester_end_year() {
+    public function test_get_semester_end_year(): void {
         $now = new \DateTime('now');
         set_config('semester_end', $now->format('Y-m-d'), 'local_lytix');
         $year = forms_helper::get_semester_end_year();

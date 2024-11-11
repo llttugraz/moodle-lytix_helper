@@ -37,11 +37,12 @@ use mod_quiz\quiz_settings;
  * Class privacy_lib_test
  * @coversDefaultClass \lytix_helper\dummy
  */
-class dummy_test extends \advanced_testcase {
+final class dummy_test extends \advanced_testcase {
     /**
      * Basic setup for these tests.
      */
     public function setUp(): void {
+        parent::setUp();
         $this->resetAfterTest();
     }
 
@@ -53,7 +54,7 @@ class dummy_test extends \advanced_testcase {
      * @throws \dml_exception
      * @throws \moodle_exception
      */
-    public function test_create_fake_students() {
+    public function test_create_fake_students(): void {
 
         $students = dummy::create_fake_students(0);
         self::assertIsArray($students, "Shold return an array.");
@@ -73,7 +74,7 @@ class dummy_test extends \advanced_testcase {
      * @throws \dml_exception
      * @throws \moodle_exception
      */
-    public function test_create_course_and_enrol_users() {
+    public function test_create_course_and_enrol_users(): void {
         $course            = new \stdClass();
         $course->fullname  = 'Test Course';
         $course->shortname = 'test_course';
@@ -98,7 +99,7 @@ class dummy_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    public function test_create_fake_data_for_course() {
+    public function test_create_fake_data_for_course(): void {
         global $DB;
 
         // Create needed data and variables.
@@ -132,7 +133,7 @@ class dummy_test extends \advanced_testcase {
      * @return void
      * @throws \dml_exception
      */
-    public function test_create_fake_planner_event() {
+    public function test_create_fake_planner_event(): void {
         global $DB;
         // Create data.
         $course = $this->getDataGenerator()->create_course();
@@ -157,7 +158,7 @@ class dummy_test extends \advanced_testcase {
      * @return void
      * @throws \dml_exception
      */
-    public function test_complete_fake_planner_event() {
+    public function test_complete_fake_planner_event(): void {
         global $DB;
         // Create data.
         $today = new \DateTime('now');
@@ -187,7 +188,7 @@ class dummy_test extends \advanced_testcase {
      * @return void
      * @throws \dml_exception
      */
-    public function test_create_update_fake_planner_milestone() {
+    public function test_create_update_fake_planner_milestone(): void {
         global $DB;
         // Create data.
         $student = $this->getDataGenerator()->create_user(['role' => 'student']);
@@ -223,7 +224,7 @@ class dummy_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \moodle_exception
      */
-    public function test_quiz() {
+    public function test_quiz(): void {
         // Create data.
         $start = new \DateTime('5 months ago');
         date_add($start, date_interval_create_from_date_string('6 hours'));
@@ -287,7 +288,7 @@ class dummy_test extends \advanced_testcase {
      * @return void
      * @throws \dml_exception
      */
-    public function test_create_enrol_teacher() {
+    public function test_create_enrol_teacher(): void {
         $course = $this->getDataGenerator()->create_course();
 
         $teacher = dummy::create_enrol_teacher($course);
@@ -307,7 +308,7 @@ class dummy_test extends \advanced_testcase {
      * @return void
      * @throws \dml_exception
      */
-    public function test_create_enrol_student() {
+    public function test_create_enrol_student(): void {
         $course = $this->getDataGenerator()->create_course();
 
         $student = dummy::create_enrol_student($course, 'student@tugraz.at');
@@ -327,7 +328,7 @@ class dummy_test extends \advanced_testcase {
      * @return void
      * @throws \dml_exception
      */
-    public function test_set_semester_start_and_end() {
+    public function test_set_semester_start_and_end(): void {
         $start = new \DateTime('5 months ago');
         $today = new \DateTime('today midnight');
         dummy::set_semester_start_and_end($start, $today);
@@ -343,7 +344,7 @@ class dummy_test extends \advanced_testcase {
      * @return void
      * @throws \dml_exception
      */
-    public function test_add_course_and_set_plattform() {
+    public function test_add_course_and_set_plattform(): void {
         $courseid = 123;
         $platform = 'moodle_test';
         dummy::add_course_and_set_plattform($courseid, $platform);
@@ -361,7 +362,7 @@ class dummy_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    public function test_create_assignment() {
+    public function test_create_assignment(): void {
         $start = new \DateTime('5 months ago');
         date_add($start, date_interval_create_from_date_string('6 hours'));
         $today = new \DateTime('today midnight');
@@ -387,7 +388,7 @@ class dummy_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    public function test_complete_activity() {
+    public function test_complete_activity(): void {
         // Create data.
         $start = new \DateTime('5 months ago');
         date_add($start, date_interval_create_from_date_string('6 hours'));
@@ -418,12 +419,12 @@ class dummy_test extends \advanced_testcase {
      * @return void
      * @throws \coding_exception
      */
-    public function test_set_aggregation_method() {
+    public function test_set_aggregation_method(): void {
         $course = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
-        $aggdata     = array(
+        $aggdata     = [
             'course'       => $course->id,
-            'criteriatype' => COMPLETION_CRITERIA_TYPE_ACTIVITY
-        );
+            'criteriatype' => COMPLETION_CRITERIA_TYPE_ACTIVITY,
+        ];
 
         dummy::set_aggregation_method($course, COMPLETION_AGGREGATION_ANY);
         $aggregation = new \completion_aggregation($aggdata);

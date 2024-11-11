@@ -32,7 +32,7 @@ use lytix_helper\task\aggregate_user_activities;
  * Class privacy_lib_test
  * @coversDefaultClass \lytix_helper\task\aggregate_user_activities
  */
-class aggregate_user_activities_test extends \advanced_testcase {
+final class aggregate_user_activities_test extends \advanced_testcase {
     /**
      * Course variable.
      * @var \stdClass|null
@@ -68,6 +68,7 @@ class aggregate_user_activities_test extends \advanced_testcase {
      * Sets up course for tests.
      */
     public function setUp(): void {
+        parent::setUp();
         $this->resetAfterTest();
         $this->setAdminUser();
         $start = new \DateTime($this->days . " days ago");
@@ -97,7 +98,7 @@ class aggregate_user_activities_test extends \advanced_testcase {
      * @covers ::get_name
      * @return void
      */
-    public function test_task_get_name() {
+    public function test_task_get_name(): void {
         $task = new aggregate_user_activities();
         self::assertIsString($task->get_name(), "Aggregate user activities for Lytix");
     }
@@ -109,7 +110,7 @@ class aggregate_user_activities_test extends \advanced_testcase {
      * @return void
      * @throws \dml_exception
      */
-    public function test_task_execute() {
+    public function test_task_execute(): void {
         global $DB;
 
         foreach ($this->students as $student) {
@@ -124,6 +125,15 @@ class aggregate_user_activities_test extends \advanced_testcase {
 
         $dlys = $DB->get_records('lytix_helper_dly_mdl_acty', ['courseid' => $this->course->id]);
         self::assertEquals($this->usercount * $this->days, count($dlys), "");
+
+        // Update 2024-11-05: This test is extended for cleanup (implemented in local_lytix).
+        $DB->insert_record('lytix_helper_last_aggreg', ['courseid' => $this->course->id,
+                'userid' => $this->students[0]->id, 'contextid' => 1, 'timestamp' => 1]);
+        delete_user($this->students[0]);
+        self::assertEquals(0, $DB->count_records('lytix_helper_last_aggreg'));
+
+        delete_course($this->course->id, false);
+        self::assertEquals(0, $DB->count_records('lytix_helper_dly_mdl_acty', ['courseid' => $this->course->id]));
     }
 
     /**
@@ -200,7 +210,7 @@ class aggregate_user_activities_test extends \advanced_testcase {
             'assignfeedback_comments',
             'assignsubmission_file',
             'assignsubmission_onlinetext',
-            'mod_feedback'
+            'mod_feedback',
         ];
 
         for ($j = 0; $j < $this->interactioncount; $j++) {
@@ -220,7 +230,7 @@ class aggregate_user_activities_test extends \advanced_testcase {
      * @return void
      * @throws \dml_exception
      */
-    private function save_interaction_to_database ($userid, $courseid, $timestamp, $component) {
+    private function save_interaction_to_database($userid, $courseid, $timestamp, $component) {
         global $DB;
 
         $record = new \stdClass();
@@ -248,7 +258,7 @@ class aggregate_user_activities_test extends \advanced_testcase {
      * @return string
      * @throws \Exception
      */
-    private function generate_random_string ($length) {
+    private function generate_random_string($length) {
         $randombytes = random_bytes(floor(($length + 1) / 2));
         $randomstring = substr(bin2hex($randombytes), 0, $length);
 

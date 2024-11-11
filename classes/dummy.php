@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * This file generates dummy data for the tests.
  *
@@ -104,7 +105,7 @@ class dummy {
         }
         $return = [
             'course' => $newcourse,
-            'student0' => $students[0]
+            'student0' => $students[0],
         ];
         return $return;
     }
@@ -399,7 +400,7 @@ class dummy {
         global $DB;
         $dg = advanced_testcase::getDataGenerator();
 
-        $teacherrole = $DB->get_record('role', array('shortname' => 'editingteacher'));
+        $teacherrole = $DB->get_record('role', ['shortname' => 'editingteacher']);
         $teacher     = $dg->create_user();
         if ($dg->enrol_user($teacher->id, $course->id, $teacherrole->id)) {
             return $teacher;
@@ -419,8 +420,8 @@ class dummy {
         global $DB;
         $dg = advanced_testcase::getDataGenerator();
 
-        $role    = $DB->get_record('role', array('shortname' => 'student'), '*', MUST_EXIST);
-        $student = $dg->create_user(array('email' => $email));
+        $role    = $DB->get_record('role', ['shortname' => 'student'], '*', MUST_EXIST);
+        $student = $dg->create_user(['email' => $email]);
         if ($dg->enrol_user($student->id, $course->id, $role->id)) {
             return $student;
         } else {
@@ -494,7 +495,7 @@ class dummy {
                 [
                     'module' => $moduleid,
                     'instance' => $instance->id,
-                    'course' => $course->id
+                    'course' => $course->id,
                 ]);
             if ($cmid) {
                 $DB->set_field('course_modules', 'completion', '2', ['id' => $cmid]);
@@ -535,10 +536,10 @@ class dummy {
      * @throws coding_exception
      */
     public static function set_aggregation_method(\stdClass $course, int $method) {
-        $aggdata     = array(
+        $aggdata     = [
             'course'       => $course->id,
-            'criteriatype' => COMPLETION_CRITERIA_TYPE_ACTIVITY
-        );
+            'criteriatype' => COMPLETION_CRITERIA_TYPE_ACTIVITY,
+        ];
         $aggregation = new \completion_aggregation($aggdata);
         $aggregation->setMethod($method);
         $aggregation->save();

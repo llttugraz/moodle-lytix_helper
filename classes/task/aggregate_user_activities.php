@@ -82,7 +82,7 @@ class aggregate_user_activities extends \core\task\scheduled_task {
                         AND logstore.timecreated >= :startdate AND logstore.timecreated <= :enddate
                         ORDER BY timecreated";
 
-                $params = array();
+                $params = [];
                 $params['userid'] = $userid;
                 $params['startdate'] = $startdate->getTimestamp();
                 $params['enddate'] = $enddate->getTimestamp();
@@ -131,7 +131,7 @@ class aggregate_user_activities extends \core\task\scheduled_task {
 
                     foreach ($user as $courseid => $data) {
 
-                        $record = array();
+                        $record = [];
                         $record['userid'] = $userid;
                         $record['courseid'] = $courseid;
                         foreach ($data as $colname => $colval) {
@@ -183,7 +183,7 @@ class aggregate_user_activities extends \core\task\scheduled_task {
             'assignfeedback_comments' => 'submission',
             'assignsubmission_file' => 'submission',
             'assignsubmission_onlinetext' => 'submission',
-            'mod_feedback' => 'feedback'
+            'mod_feedback' => 'feedback',
         ];
 
         return (array_key_exists($component, $map)) ? $map[$component] : '';
