@@ -80,5 +80,27 @@ function xmldb_lytix_helper_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2022102000, 'lytix', 'helper');
     }
 
+    if ($oldversion < 2024111100) {
+        global $DB;
+        // Delete deleted users from table 'lytix_helper_last_aggreg'.
+        $DB->delete_records_select('lytix_helper_last_aggreg',
+                'userid IN (SELECT id FROM  {user} WHERE deleted = 1)');
+
+        // Delete non-existing courses from table 'lytix_helper_last_aggreg'.
+        $DB->delete_records_select('lytix_helper_last_aggreg',
+                'courseid NOT IN (SELECT id FROM  {course})');
+
+        // Delete deleted users from table 'lytix_helper_dly_mdl_acty'.
+        $DB->delete_records_select('lytix_helper_dly_mdl_acty',
+                'userid IN (SELECT id FROM  {user} WHERE deleted = 1)');
+
+        // Delete non-existing courses from table 'lytix_helper_dly_mdl_acty'.
+        $DB->delete_records_select('lytix_helper_dly_mdl_acty',
+                'courseid NOT IN (SELECT id FROM  {course})');
+
+        // Coursepolicy savepoint reached.
+        upgrade_plugin_savepoint(true, 2024111100, 'lytix', 'helper');
+    }
+
     return true;
 }
