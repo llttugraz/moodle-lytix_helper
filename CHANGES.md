@@ -1,3 +1,6 @@
+### v2.0.5 - 14.08.2025
+- New/updated translation strings
+
 ### v2.0.4 - 25.10.2024
 - Update for compatibility with Moodle 4.5
 - Fix dependencies
